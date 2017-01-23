@@ -2,7 +2,7 @@ type protocol_error =
   | No_IPC_socket
   | Bad_magic_string of string
   | Unexpected_eof
-  | Unknown_type of Int32.t
+  | Unknown_type of Stdint.Uint32.t
   | Bad_reply of string
 
 exception Protocol_error of protocol_error
@@ -33,7 +33,7 @@ module Reply : sig
   type output = {
     name: string;
     active: bool;
-    current_workspace: string;
+    current_workspace: string option;
     rect: rect;
   }
 
@@ -48,7 +48,7 @@ module Reply : sig
   type node_border =
     | Border_normal
     | Border_none
-    | Border_1pixel
+    | Border_pixel
 
   type node_layout =
     | SplitH
@@ -58,11 +58,11 @@ module Reply : sig
     | Dockarea
     | Output
     | Unknown of string
-  
+
   type node = {
     nodes: node list;
     id: int32;
-    name: string;
+    name: string option;
     nodetype: node_type;
     border: node_border;
     current_border_width: int;
@@ -145,13 +145,14 @@ module Event : sig
 
   type output_change =
     | Unspecified
-  
+
   type output_event_info = {
     change: output_change;
   }
 
   type mode_event_info = {
     change: string;
+    pango_markup: bool;
   }
 
   type window_change =
@@ -163,6 +164,7 @@ module Event : sig
     | Move
     | Floating
     | Urgent
+    | Mark
 
   type window_event_info = {
     change: window_change;
@@ -179,7 +181,7 @@ module Event : sig
   type input_type =
     | Keyboard
     | Mouse
-  
+
   type binding = {
     command: string;
     event_state_mask: string list;
@@ -192,7 +194,7 @@ module Event : sig
     change: binding_change;
     binding: binding;
   }
-  
+
   type t =
     | Workspace of workspace_event_info
     | Output of output_event_info
@@ -205,6 +207,7 @@ end
 type connection
 
 val connect : unit -> connection Lwt.t
+val disconnect : connection -> unit Lwt.t
 
 type subscription =
   | Workspace
@@ -214,8 +217,8 @@ type subscription =
   | BarConfig
   | Binding
 
-val events : connection -> Event.t Lwt_stream.t
-val subscribe : connection -> subscription -> unit Lwt.t
+val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
+val next_event : connection -> Event.t Lwt.t
 
 val command : connection -> string -> Reply.command_outcome list Lwt.t
 val get_workspaces : connection -> Reply.workspace list Lwt.t

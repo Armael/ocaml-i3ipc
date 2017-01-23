@@ -3,4 +3,5 @@ PKG lwt.ppx
 PKG stdint
 PKG yojson
 PKG result
+PKG ppx_deriving
 PKG ppx_deriving_yojson
