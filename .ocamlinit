@@ -4,4 +4,5 @@
 #require "yojson";;
 #require "ppx_deriving_yojson";;
 #require "rresult";;
+#directory "_build/src";;
 #load "i3ipc.cmo";;
