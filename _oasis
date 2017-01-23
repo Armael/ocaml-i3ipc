@@ -1,0 +1,18 @@
+OASISFormat: 0.4
+Name:        i3ipc
+Version:     0.22
+Homepage:    https://github.com/Armael/ocaml-i3ipc
+Authors:     Armaël Guéneau
+License:     MIT
+LicenseFile: LICENSE
+Plugins:     META (0.3), DevFiles (0.3)
+OCamlVersion: >= 4.02.0
+BuildTools:  ocamlbuild
+AlphaFeatures: compiled_setup_ml
+
+Synopsis:    A pure OCaml implementation of the i3 IPC protocol
+
+Library "i3ipc"
+  Path:             src/
+  Modules:          I3ipc
+  BuildDepends:     lwt, lwt.unix, lwt.ppx, stdint, result, ppx_deriving_yojson
