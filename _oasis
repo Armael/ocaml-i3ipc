@@ -1,6 +1,6 @@
 OASISFormat: 0.4
 Name:        i3ipc
-Version:     0.22
+Version:     0.1
 Homepage:    https://github.com/Armael/ocaml-i3ipc
 Authors:     Armaël Guéneau
 License:     MIT
