@@ -537,13 +537,20 @@ let get_version conn =
 (******************************************************************************)
 
 type subscription =
-  | Workspace [@name "workspace"]
-  | Output    [@name "output"]
-  | Mode      [@name "mode"]
-  | Window    [@name "window"]
-  | BarConfig [@name "barconfig_update"]
-  | Binding   [@name "binding"]
-[@@deriving to_yojson]
+  | Workspace
+  | Output
+  | Mode
+  | Window
+  | BarConfig
+  | Binding
+
+let subscription_to_yojson = function
+  | Workspace -> `String "workspace"
+  | Output -> `String "output"
+  | Mode -> `String "mode"
+  | Window -> `String "window"
+  | BarConfig -> `String "barconfig_update"
+  | Binding -> `String "binding"
 
 type subscription_list =
   subscription list [@@deriving to_yojson]
