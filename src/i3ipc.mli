@@ -210,6 +210,8 @@ module Event : sig
     | Binding of binding_event_info
 end
 
+(** {2 Connection to i3} *)
+
 (** Type describing a connection to the i3 IPC endpoint. *)
 type connection
 
@@ -218,6 +220,8 @@ val connect : unit -> connection Lwt.t
 
 (** Close a [connection]. *)
 val disconnect : connection -> unit Lwt.t
+
+(** {2 Event subscription} *)
 
 type subscription =
   | Workspace
@@ -232,6 +236,8 @@ val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
 
 (** Wait for the next event, among those subscribed to. *)
 val next_event : connection -> Event.t Lwt.t
+
+(** {2 Commands and queries} *)
 
 (** Run an i3 command. See {{:
     http://i3wm.org/docs/userguide.html#_list_of_commands }

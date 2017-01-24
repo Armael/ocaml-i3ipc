@@ -45,3 +45,12 @@ setup.exe: setup.ml
 .PHONY: build doc test all install uninstall reinstall clean distclean configure
 
 # OASIS_STOP
+
+gh-pages: doc
+	git checkout gh-pages
+	rm -rf dev/*
+	cp -r i3ipc.docdir/* dev/
+	git add dev/*
+	git commit -m "update docs"
+	git push
+	git checkout master
