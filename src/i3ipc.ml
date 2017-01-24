@@ -318,6 +318,7 @@ module Event = struct
     command: string;
     event_state_mask: string list;
     input_code: int;
+    mods: string list option;
     symbol: string option;
     input_type: input_type;
   } [@@deriving of_yojson]
