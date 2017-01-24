@@ -16,7 +16,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 
 body { font: normal 11pt/1.375em helvetica, arial, sans-serif; text-align:left;
        margin: 1.375em 10%; min-width: 40ex; max-width: 72ex;
-       color: black; background: white /* url(line-height-22.gif) */; }
+       color: black; background: #e8e8e8 /* url(line-height-22.gif) */; }
 
 b { font-weight: bold }
 em { font-style: italic }
@@ -93,7 +93,7 @@ a:hover { text-decoration : underline }
 .keyword { font-weight: bold; color : darkred }
 .pipe { margin-right: 0.3em; }
 .comment { color : red }
-.constructor { color : green }
+.constructor { color : darkgreen }
 .constructor:before { content: " " }
 .string { color : brown }
 .warning { color : red ; font-weight : bold }
