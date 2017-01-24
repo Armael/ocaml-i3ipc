@@ -17,16 +17,12 @@ module Reply : sig
     error: string option;
   }
 
-  val pp_command_outcome : Format.formatter -> command_outcome -> unit
-
   type rect = {
     x: int;
     y: int;
     width: int;
     height: int;
   }
-
-  val pp_rect : Format.formatter -> rect -> unit
 
   type workspace = {
     num: int;
@@ -38,16 +34,12 @@ module Reply : sig
     output: string;
   }
 
-  val pp_workspace : Format.formatter -> workspace -> unit
-
   type output = {
     name: string;
     active: bool;
     current_workspace: string option;
     rect: rect;
   }
-
-  val pp_output : Format.formatter -> output -> unit
 
   type node_type =
     | Root
@@ -57,14 +49,10 @@ module Reply : sig
     | Workspace
     | Dockarea
 
-  val pp_node_type : Format.formatter -> node_type -> unit
-
   type node_border =
     | Border_normal
     | Border_none
     | Border_pixel
-
-  val pp_node_border : Format.formatter -> node_border -> unit
 
   type node_layout =
     | SplitH
@@ -74,8 +62,6 @@ module Reply : sig
     | Dockarea
     | Output
     | Unknown of string
-
-  val pp_node_layout : Format.formatter -> node_layout -> unit
 
   type node = {
     nodes: node list;
@@ -94,8 +80,6 @@ module Reply : sig
     urgent: bool;
     focused: bool;
   }
-
-  val pp_node : Format.formatter -> node -> unit
 
   type mark = string
   type bar_id = string
@@ -124,14 +108,10 @@ module Reply : sig
     | BindingModeBorder
     | Undocumented of string
 
-  val pp_colorable_bar_part : Format.formatter -> colorable_bar_part -> unit
-
   module Bar_parts_map : Map.S
     with type key = colorable_bar_part
 
   type bar_colors = string Bar_parts_map.t
-
-  val pp_bar_colors : Format.formatter -> bar_colors -> unit
 
   type bar_config = {
     id: string;
@@ -145,8 +125,6 @@ module Reply : sig
     colors: bar_colors;
   }
 
-  val pp_bar_config : Format.formatter -> bar_config -> unit
-
   type version = {
     major: int;
     minor: int;
@@ -155,6 +133,19 @@ module Reply : sig
     loaded_config_file_name: string;
   }
 
+  (** {3 Pretty-printing} *)
+
+  val pp_command_outcome : Format.formatter -> command_outcome -> unit
+  val pp_rect : Format.formatter -> rect -> unit
+  val pp_workspace : Format.formatter -> workspace -> unit
+  val pp_output : Format.formatter -> output -> unit
+  val pp_node_type : Format.formatter -> node_type -> unit
+  val pp_node_border : Format.formatter -> node_border -> unit
+  val pp_node_layout : Format.formatter -> node_layout -> unit
+  val pp_node : Format.formatter -> node -> unit
+  val pp_colorable_bar_part : Format.formatter -> colorable_bar_part -> unit
+  val pp_bar_colors : Format.formatter -> bar_colors -> unit
+  val pp_bar_config : Format.formatter -> bar_config -> unit
   val pp_version : Format.formatter -> version -> unit
 end
 
@@ -166,33 +157,23 @@ module Event : sig
     | Empty
     | Urgent
 
-  val pp_workspace_change : Format.formatter -> workspace_change -> unit
-
   type workspace_event_info = {
     change: workspace_change;
     current: Reply.node option;
     old: Reply.node option;
   }
 
-  val pp_workspace_event_info : Format.formatter -> workspace_event_info -> unit
-
   type output_change =
     | Unspecified
-
-  val pp_output_change : Format.formatter -> output_change -> unit
 
   type output_event_info = {
     change: output_change;
   }
 
-  val pp_output_event_info : Format.formatter -> output_event_info -> unit
-
   type mode_event_info = {
     change: string;
     pango_markup: bool;
   }
-
-  val pp_mode_event_info : Format.formatter -> mode_event_info -> unit
 
   type window_change =
     | New
@@ -205,31 +186,21 @@ module Event : sig
     | Urgent
     | Mark
 
-  val pp_window_change : Format.formatter -> window_change -> unit
-
   type window_event_info = {
     change: window_change;
     container: Reply.node;
   }
 
-  val pp_window_event_info : Format.formatter -> window_event_info -> unit
-
   type bar_config_event_info = {
     bar_config: Reply.bar_config;
   }
 
-  val pp_bar_config_event_info : Format.formatter -> bar_config_event_info -> unit
-
   type binding_change =
     | Run
-
-  val pp_binding_change : Format.formatter -> binding_change -> unit
 
   type input_type =
     | Keyboard
     | Mouse
-
-  val pp_input_type : Format.formatter -> input_type -> unit
 
   type binding = {
     command: string;
@@ -240,14 +211,10 @@ module Event : sig
     input_type: input_type;
   }
 
-  val pp_binding : Format.formatter -> binding -> unit
-
   type binding_event_info = {
     change: binding_change;
     binding: binding;
   }
-
-  val pp_binding_event_info : Format.formatter -> binding_event_info -> unit
 
   type t =
     | Workspace of workspace_event_info
@@ -257,6 +224,20 @@ module Event : sig
     | BarConfig of bar_config_event_info
     | Binding of binding_event_info
 
+  (** {3 Pretty-printing} *)
+
+  val pp_workspace_change : Format.formatter -> workspace_change -> unit
+  val pp_workspace_event_info : Format.formatter -> workspace_event_info -> unit
+  val pp_output_change : Format.formatter -> output_change -> unit
+  val pp_output_event_info : Format.formatter -> output_event_info -> unit
+  val pp_mode_event_info : Format.formatter -> mode_event_info -> unit
+  val pp_window_change : Format.formatter -> window_change -> unit
+  val pp_window_event_info : Format.formatter -> window_event_info -> unit
+  val pp_bar_config_event_info : Format.formatter -> bar_config_event_info -> unit
+  val pp_binding_change : Format.formatter -> binding_change -> unit
+  val pp_input_type : Format.formatter -> input_type -> unit
+  val pp_binding : Format.formatter -> binding -> unit
+  val pp_binding_event_info : Format.formatter -> binding_event_info -> unit
   val pp : Format.formatter -> t -> unit
 end
 
