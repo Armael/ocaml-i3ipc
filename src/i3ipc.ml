@@ -22,17 +22,17 @@ module Reply = struct
   type command_outcome = {
     success: bool;
     error: (string option [@default None]);
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson, show]
 
   type command_outcome_list =
-    command_outcome list [@@deriving of_yojson]
+    command_outcome list [@@deriving of_yojson, show]
 
   type rect = {
     x: int;
     y: int;
     width: int;
     height: int;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson, show]
 
   type workspace = {
     num: int;
@@ -42,7 +42,7 @@ module Reply = struct
     urgent: bool;
     rect: rect;
     output: string;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type workspace_list =
     workspace list [@@deriving of_yojson]
@@ -52,10 +52,10 @@ module Reply = struct
     active: bool;
     current_workspace: string option;
     rect: rect;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type output_list =
-    output list [@@deriving of_yojson]
+    output list [@@deriving of_yojson, show]
 
   type node_type =
     | Root
@@ -64,6 +64,7 @@ module Reply = struct
     | Floating_con
     | Workspace
     | Dockarea
+  [@@deriving show]
 
   let node_type_of_yojson = function
     | `String "root" -> Result.Ok Root
@@ -78,6 +79,7 @@ module Reply = struct
     | Border_normal
     | Border_none
     | Border_pixel
+  [@@deriving show]
 
   let node_border_of_yojson = function
     | `String "normal" -> Result.Ok Border_normal
@@ -93,6 +95,7 @@ module Reply = struct
     | Dockarea
     | Output
     | Unknown of string
+  [@@deriving show]
 
   let node_layout_of_yojson = function
     | `String "splith" -> Result.Ok SplitH
@@ -120,13 +123,13 @@ module Reply = struct
     window: int option;
     urgent: bool;
     focused: bool;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
-  type mark = string [@@deriving yojson]
-  type mark_list = mark list [@@deriving yojson]
+  type mark = string [@@deriving yojson, show]
+  type mark_list = mark list [@@deriving yojson, show]
 
-  type bar_id = string [@@deriving yojson]
-  type bar_id_list = bar_id list [@@deriving yojson]
+  type bar_id = string [@@deriving yojson, show]
+  type bar_id_list = bar_id list [@@deriving yojson, show]
 
   type colorable_bar_part =
     | Background
@@ -151,6 +154,7 @@ module Reply = struct
     | BindingModeBackground
     | BindingModeBorder
     | Undocumented of string
+  [@@deriving show]
 
   module Bar_parts_map = Map.Make (struct
       type t = colorable_bar_part
@@ -158,6 +162,22 @@ module Reply = struct
     end)
 
   type bar_colors = string Bar_parts_map.t
+
+  let pp_bar_colors fmt colors =
+    Format.pp_print_string fmt "{";
+    let first = ref true in
+    Bar_parts_map.iter
+      (fun k v ->
+         if !first then first := false
+         else (
+           Format.pp_print_string fmt "; ";
+           Format.pp_print_cut fmt ()
+         );
+         pp_colorable_bar_part fmt k;
+         Format.pp_print_string fmt ":";
+         Format.pp_print_string fmt v)
+      colors;
+    Format.pp_print_string fmt "}"
 
   let colorable_bar_part_of_string = function
     | "background" -> Background
@@ -211,7 +231,7 @@ module Reply = struct
     binding_mode_indicator: bool;
     verbose: bool;
     colors: bar_colors;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type version = {
     major: int;
@@ -219,7 +239,7 @@ module Reply = struct
     patch: int;
     human_readable: string;
     loaded_config_file_name: string;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   let handle_error = function
     | Result.Ok x -> x
@@ -237,6 +257,7 @@ module Event = struct
     | Init
     | Empty
     | Urgent
+  [@@deriving show]
 
   let workspace_change_of_yojson = function
     | `String "focus" -> Result.Ok Focus
@@ -249,10 +270,11 @@ module Event = struct
     change: workspace_change;
     current: Reply.node option;
     old: Reply.node option;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type output_change =
     | Unspecified
+  [@@deriving show]
 
   let output_change_of_yojson = function
     | `String "unspecified" -> Result.Ok Unspecified
@@ -260,12 +282,12 @@ module Event = struct
 
   type output_event_info = {
     change: output_change;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type mode_event_info = {
     change: string;
     pango_markup: bool;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type window_change =
     | New
@@ -277,6 +299,7 @@ module Event = struct
     | Floating
     | Urgent
     | Mark
+  [@@deriving show]
 
   let window_change_of_yojson = function
     | `String "new" -> Result.Ok New
@@ -292,14 +315,15 @@ module Event = struct
   type window_event_info = {
     change: window_change;
     container: Reply.node;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type bar_config_event_info = {
     bar_config: Reply.bar_config;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type binding_change =
     | Run
+  [@@deriving show]
 
   let binding_change_of_yojson = function
     | `String "run" -> Result.Ok Run
@@ -308,6 +332,7 @@ module Event = struct
   type input_type =
     | Keyboard
     | Mouse
+  [@@deriving show]
 
   let input_type_of_yojson = function
     | `String "keyboard" -> Result.Ok Keyboard
@@ -321,12 +346,12 @@ module Event = struct
     mods: string list option;
     symbol: string option;
     input_type: input_type;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type binding_event_info = {
     change: binding_change;
     binding: binding;
-  } [@@deriving of_yojson { strict = false } ]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type t =
     | Workspace of workspace_event_info
@@ -335,6 +360,7 @@ module Event = struct
     | Window of window_event_info
     | BarConfig of bar_config_event_info
     | Binding of binding_event_info
+  [@@deriving show]
 end
 
 (******************************************************************************)

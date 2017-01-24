@@ -8,7 +8,6 @@ build: setup.data $(SETUP)
 
 doc: setup.data $(SETUP) build
 	$(SETUP) -doc $(DOCFLAGS)
-	cp doc/style.css i3ipc.docdir
 
 test: setup.data $(SETUP) build
 	$(SETUP) -test $(TESTFLAGS)
@@ -46,7 +45,10 @@ setup.exe: setup.ml
 
 # OASIS_STOP
 
-gh-pages: doc
+docs: doc
+	cp doc/style.css i3ipc.docdir
+
+gh-pages: docs
 	git checkout gh-pages
 	rm -rf dev/*
 	cp -r i3ipc.docdir/* dev/
