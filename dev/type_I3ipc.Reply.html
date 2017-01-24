@@ -12,7 +12,10 @@
 <body>
 <code class="code"><span class="keyword">sig</span><br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;command_outcome&nbsp;=&nbsp;{&nbsp;success&nbsp;:&nbsp;bool;&nbsp;error&nbsp;:&nbsp;string&nbsp;option;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_command_outcome&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.command_outcome&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;rect&nbsp;=&nbsp;{&nbsp;x&nbsp;:&nbsp;int;&nbsp;y&nbsp;:&nbsp;int;&nbsp;width&nbsp;:&nbsp;int;&nbsp;height&nbsp;:&nbsp;int;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_rect&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.rect&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;workspace&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;num&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;:&nbsp;string;<br>
@@ -22,14 +25,18 @@
 &nbsp;&nbsp;&nbsp;&nbsp;rect&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.rect;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;output&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_workspace&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.workspace&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;output&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;active&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;current_workspace&nbsp;:&nbsp;string&nbsp;option;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;rect&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.rect;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_output&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.output&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;node_type&nbsp;=&nbsp;<span class="constructor">Root</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Output</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Con</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Floating_con</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Workspace</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Dockarea</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_node_type&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node_type&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;node_border&nbsp;=&nbsp;<span class="constructor">Border_normal</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Border_none</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Border_pixel</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_node_border&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node_border&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;node_layout&nbsp;=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">SplitH</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">SplitV</span><br>
@@ -38,6 +45,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Dockarea</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Output</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Unknown</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_node_layout&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node_layout&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;node&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;nodes&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node&nbsp;list;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id&nbsp;:&nbsp;int32;<br>
@@ -55,6 +63,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;urgent&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;focused&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_node&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;mark&nbsp;=&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;bar_id&nbsp;=&nbsp;string<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;colorable_bar_part&nbsp;=<br>
@@ -80,6 +89,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">BindingModeBackground</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">BindingModeBorder</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Undocumented</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_colorable_bar_part&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.colorable_bar_part&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">module</span>&nbsp;<span class="constructor">Bar_parts_map</span>&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">sig</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;key&nbsp;=&nbsp;colorable_bar_part<br>
@@ -112,6 +123,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mapi&nbsp;:&nbsp;(key&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b&nbsp;t<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;bar_colors&nbsp;=&nbsp;string&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.<span class="constructor">Bar_parts_map</span>.t<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_bar_colors&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.bar_colors&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;bar_config&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;id&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mode&nbsp;:&nbsp;string;<br>
@@ -123,6 +135,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;verbose&nbsp;:&nbsp;bool;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;colors&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.bar_colors;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_bar_config&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.bar_config&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;version&nbsp;=&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;major&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;minor&nbsp;:&nbsp;int;<br>
@@ -130,4 +143,5 @@
 &nbsp;&nbsp;&nbsp;&nbsp;human_readable&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;loaded_config_file_name&nbsp;:&nbsp;string;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;pp_version&nbsp;:&nbsp;<span class="constructor">Format</span>.formatter&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.version&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
 <span class="keyword">end</span></code></body></html>
