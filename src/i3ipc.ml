@@ -42,7 +42,7 @@ module Reply = struct
     urgent: bool;
     rect: rect;
     output: string;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type workspace_list =
     workspace list [@@deriving of_yojson]
@@ -219,7 +219,7 @@ module Reply = struct
     patch: int;
     human_readable: string;
     loaded_config_file_name: string;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   let handle_error = function
     | Result.Ok x -> x
@@ -249,7 +249,7 @@ module Event = struct
     change: workspace_change;
     current: Reply.node option;
     old: Reply.node option;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type output_change =
     | Unspecified
@@ -260,12 +260,12 @@ module Event = struct
 
   type output_event_info = {
     change: output_change;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type mode_event_info = {
     change: string;
     pango_markup: bool;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type window_change =
     | New
@@ -292,11 +292,11 @@ module Event = struct
   type window_event_info = {
     change: window_change;
     container: Reply.node;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type bar_config_event_info = {
     bar_config: Reply.bar_config;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type binding_change =
     | Run
@@ -321,12 +321,12 @@ module Event = struct
     mods: string list option;
     symbol: string option;
     input_type: input_type;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type binding_event_info = {
     change: binding_change;
     binding: binding;
-  } [@@deriving of_yojson]
+  } [@@deriving of_yojson { strict = false } ]
 
   type t =
     | Workspace of workspace_event_info
