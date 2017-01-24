@@ -1,3 +1,6 @@
+(** A pure OCaml implementation of the i3 IPC protocol. *)
+
+(** The different errors that may be raised. *)
 type protocol_error =
   | No_IPC_socket
   | Bad_magic_string of string
@@ -7,6 +10,7 @@ type protocol_error =
 
 exception Protocol_error of protocol_error
 
+(** Type definitions for the command replies. *)
 module Reply : sig
   type command_outcome = {
     success: bool;
@@ -130,6 +134,7 @@ module Reply : sig
   }
 end
 
+(** Type definitions for the events that can be subscribed to. *)
 module Event : sig
   type workspace_change =
     | Focus
@@ -204,9 +209,13 @@ module Event : sig
     | Binding of binding_event_info
 end
 
+(** Type describing a connection to the i3 IPC endpoint. *)
 type connection
 
+(** Connect to a running i3 instance. *)
 val connect : unit -> connection Lwt.t
+
+(** Close a [connection]. *)
 val disconnect : connection -> unit Lwt.t
 
 type subscription =
@@ -217,14 +226,36 @@ type subscription =
   | BarConfig
   | Binding
 
+(** Subscribe to certain events. *)
 val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
+
+(** Wait for the next event, among those subscribed to. *)
 val next_event : connection -> Event.t Lwt.t
 
+(** Run an i3 command. See {{:
+    http://i3wm.org/docs/userguide.html#_list_of_commands }
+    http://i3wm.org/docs/userguide.html#_list_of_commands } for a list of valid
+    commands. *)
 val command : connection -> string -> Reply.command_outcome list Lwt.t
+
+(** Get the list of current workspaces. *)
 val get_workspaces : connection -> Reply.workspace list Lwt.t
+
+(** Get the list of current outputs. *)
 val get_outputs : connection -> Reply.output list Lwt.t
+
+(** Get the layout tree. i3 uses a tree data-structure to represent the layout
+    of windows in a workspace. *)
 val get_tree : connection -> Reply.node Lwt.t
+
+(** Get a list of marks (identifiers of containers). *)
 val get_marks : connection -> Reply.mark list Lwt.t
+
+(** Get the list of IDs of all configured bars. *)
 val get_bar_ids : connection -> Reply.bar_id list Lwt.t
+
+(** Get the configuration of the workspace bar with given ID. *)
 val get_bar_config : connection -> Reply.bar_id -> Reply.bar_config Lwt.t
+
+(** Get the version of i3. *)
 val get_version : connection -> Reply.version Lwt.t

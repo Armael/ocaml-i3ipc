@@ -8,7 +8,7 @@ LicenseFile: LICENSE
 Plugins:     META (0.3), DevFiles (0.3)
 OCamlVersion: >= 4.02.0
 BuildTools:  ocamlbuild
-AlphaFeatures: compiled_setup_ml
+AlphaFeatures: compiled_setup_ml, ocamlbuild_more_args
 
 Synopsis:    A pure OCaml implementation of the i3 IPC protocol
 
@@ -16,3 +16,12 @@ Library "i3ipc"
   Path:             src/
   Modules:          I3ipc
   BuildDepends:     lwt, lwt.unix, lwt.ppx, stdint, result, ppx_deriving_yojson
+
+Document i3ipc
+  Title:                I3ipc documentation
+  Type:                 ocamlbuild (0.3)
+  BuildTools+:          ocamldoc
+  Install:              true
+  XOcamlbuildPath:      .
+  XOcamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -charset utf-8'"
+  XOcamlbuildLibraries: i3ipc

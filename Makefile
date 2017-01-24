@@ -8,6 +8,7 @@ build: setup.data $(SETUP)
 
 doc: setup.data $(SETUP) build
 	$(SETUP) -doc $(DOCFLAGS)
+	cp doc/style.css i3ipc.docdir
 
 test: setup.data $(SETUP) build
 	$(SETUP) -test $(TESTFLAGS)
