@@ -1,0 +1,58 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="I3ipc" rel="Chapter" href="I3ipc.html"><title>I3ipc.Event</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;workspace_change&nbsp;=&nbsp;<span class="constructor">Focus</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Init</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Empty</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Urgent</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;workspace_event_info&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;change&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.workspace_change;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;current&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node&nbsp;option;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;old&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node&nbsp;option;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;output_change&nbsp;=&nbsp;<span class="constructor">Unspecified</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;output_event_info&nbsp;=&nbsp;{&nbsp;change&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.output_change;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;mode_event_info&nbsp;=&nbsp;{&nbsp;change&nbsp;:&nbsp;string;&nbsp;pango_markup&nbsp;:&nbsp;bool;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;window_change&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">New</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Close</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Focus</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Title</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">FullscreenMode</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Move</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Floating</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Urgent</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Mark</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;window_event_info&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;change&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.window_change;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;container&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.node;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;bar_config_event_info&nbsp;=&nbsp;{&nbsp;bar_config&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Reply</span>.bar_config;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;binding_change&nbsp;=&nbsp;<span class="constructor">Run</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;input_type&nbsp;=&nbsp;<span class="constructor">Keyboard</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Mouse</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;binding&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;command&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;event_state_mask&nbsp;:&nbsp;string&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input_code&nbsp;:&nbsp;int;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;symbol&nbsp;:&nbsp;string&nbsp;option;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;input_type&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.input_type;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;binding_event_info&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;change&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.binding_change;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;binding&nbsp;:&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.binding;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Workspace</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.workspace_event_info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Output</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.output_event_info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Mode</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.mode_event_info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Window</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.window_event_info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">BarConfig</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.bar_config_event_info<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Binding</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">I3ipc</span>.<span class="constructor">Event</span>.binding_event_info<br>
+<span class="keyword">end</span></code></body></html>
