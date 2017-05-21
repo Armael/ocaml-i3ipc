@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="I3ipc" rel="Chapter" href="I3ipc.html"><link title="Connection to i3" rel="Section" href="#2_Connectiontoi3">
+<link title="Event subscription" rel="Section" href="#2_Eventsubscription">
+<link title="Commands and queries" rel="Section" href="#2_Commandsandqueries">
+<title>I3ipc</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_I3ipc.html">I3ipc</a></h1>
+
+<pre><span class="keyword">module</span> I3ipc: <code class="code"><span class="keyword">sig</span></code> <a href="I3ipc.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+A pure OCaml implementation of the i3 IPC protocol.<br>
+</div>
+<hr width="100%">
+
+<pre><code><span id="TYPEprotocol_error"><span class="keyword">type</span> <code class="type"></code>protocol_error</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprotocol_error.No_IPC_socket"><span class="constructor">No_IPC_socket</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprotocol_error.Bad_magic_string"><span class="constructor">Bad_magic_string</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprotocol_error.Unexpected_eof"><span class="constructor">Unexpected_eof</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprotocol_error.Unknown_type"><span class="constructor">Unknown_type</span></span> <span class="keyword">of</span> <code class="type">Stdint.Uint32.t</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTprotocol_error.Bad_reply"><span class="constructor">Bad_reply</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr></table>
+
+<div class="info ">
+The different errors that may be raised.<br>
+</div>
+
+
+<pre><span id="EXCEPTIONProtocol_error"><span class="keyword">exception</span> Protocol_error</span> <span class="keyword">of</span> <code class="type"><a href="I3ipc.html#TYPEprotocol_error">protocol_error</a></code></pre>
+
+<pre><span class="keyword">module</span> <a href="I3ipc.Reply.html">Reply</a>: <code class="code"><span class="keyword">sig</span></code> <a href="I3ipc.Reply.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Type definitions for the command replies.
+</div>
+
+<pre><span class="keyword">module</span> <a href="I3ipc.Event.html">Event</a>: <code class="code"><span class="keyword">sig</span></code> <a href="I3ipc.Event.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Type definitions for the events that can be subscribed to.
+</div>
+<br>
+<h2 id="2_Connectiontoi3">Connection to i3</h2><br>
+
+<pre><span id="TYPEconnection"><span class="keyword">type</span> <code class="type"></code>connection</span> </pre>
+<div class="info ">
+Type describing a connection to the i3 IPC endpoint.<br>
+</div>
+
+
+<pre><span id="VALconnect"><span class="keyword">val</span> connect</span> : <code class="type">unit -> <a href="I3ipc.html#TYPEconnection">connection</a> Lwt.t</code></pre><div class="info ">
+Connect to a running i3 instance.<br>
+</div>
+
+<pre><span id="VALdisconnect"><span class="keyword">val</span> disconnect</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> unit Lwt.t</code></pre><div class="info ">
+Close a <code class="code">connection</code>.<br>
+</div>
+<br>
+<h2 id="2_Eventsubscription">Event subscription</h2><br>
+
+<pre><code><span id="TYPEsubscription"><span class="keyword">type</span> <code class="type"></code>subscription</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.Workspace"><span class="constructor">Workspace</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.Output"><span class="constructor">Output</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.Mode"><span class="constructor">Mode</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.Window"><span class="constructor">Window</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.BarConfig"><span class="constructor">BarConfig</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTsubscription.Binding"><span class="constructor">Binding</span></span></code></td>
+
+</tr></table>
+
+
+
+<pre><span id="VALsubscribe"><span class="keyword">val</span> subscribe</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -><br>       <a href="I3ipc.html#TYPEsubscription">subscription</a> list -> <a href="I3ipc.Reply.html#TYPEcommand_outcome">Reply.command_outcome</a> Lwt.t</code></pre><div class="info ">
+Subscribe to certain events.<br>
+</div>
+
+<pre><span id="VALnext_event"><span class="keyword">val</span> next_event</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Event.html#TYPEt">Event.t</a> Lwt.t</code></pre><div class="info ">
+Wait for the next event, among those subscribed to.<br>
+</div>
+<br>
+<h2 id="2_Commandsandqueries">Commands and queries</h2><br>
+
+<pre><span id="VALcommand"><span class="keyword">val</span> command</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> string -> <a href="I3ipc.Reply.html#TYPEcommand_outcome">Reply.command_outcome</a> list Lwt.t</code></pre><div class="info ">
+Run an i3 command. See <a href="
+    http://i3wm.org/docs/userguide.html#_list_of_commands ">
+    http://i3wm.org/docs/userguide.html#_list_of_commands </a> for a list of valid
+    commands.<br>
+</div>
+
+<pre><span id="VALget_workspaces"><span class="keyword">val</span> get_workspaces</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEworkspace">Reply.workspace</a> list Lwt.t</code></pre><div class="info ">
+Get the list of current workspaces.<br>
+</div>
+
+<pre><span id="VALget_outputs"><span class="keyword">val</span> get_outputs</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEoutput">Reply.output</a> list Lwt.t</code></pre><div class="info ">
+Get the list of current outputs.<br>
+</div>
+
+<pre><span id="VALget_tree"><span class="keyword">val</span> get_tree</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEnode">Reply.node</a> Lwt.t</code></pre><div class="info ">
+Get the layout tree. i3 uses a tree data-structure to represent the layout
+    of windows in a workspace.<br>
+</div>
+
+<pre><span id="VALget_marks"><span class="keyword">val</span> get_marks</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEmark">Reply.mark</a> list Lwt.t</code></pre><div class="info ">
+Get a list of marks (identifiers of containers).<br>
+</div>
+
+<pre><span id="VALget_bar_ids"><span class="keyword">val</span> get_bar_ids</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEbar_id">Reply.bar_id</a> list Lwt.t</code></pre><div class="info ">
+Get the list of IDs of all configured bars.<br>
+</div>
+
+<pre><span id="VALget_bar_config"><span class="keyword">val</span> get_bar_config</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEbar_id">Reply.bar_id</a> -> <a href="I3ipc.Reply.html#TYPEbar_config">Reply.bar_config</a> Lwt.t</code></pre><div class="info ">
+Get the configuration of the workspace bar with given ID.<br>
+</div>
+
+<pre><span id="VALget_version"><span class="keyword">val</span> get_version</span> : <code class="type"><a href="I3ipc.html#TYPEconnection">connection</a> -> <a href="I3ipc.Reply.html#TYPEversion">Reply.version</a> Lwt.t</code></pre><div class="info ">
+Get the version of i3.<br>
+</div>
+</body></html>
