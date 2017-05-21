@@ -9,7 +9,7 @@ commands, query information about the state of the WM, and subscribe to events.
 ## Install
 
 ```
-opam pin add i3ipc https://github.com/Armael/ocaml-i3ipc.git
+opam install i3ipc
 ```
 
 ## Documentation
