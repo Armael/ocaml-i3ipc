@@ -25,3 +25,10 @@ Document i3ipc
   XOcamlbuildPath:      .
   XOcamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -charset utf-8'"
   XOcamlbuildLibraries: i3ipc
+
+Executable i3_msg
+  Path:                 examples
+  MainIs:               i3_msg.ml
+  Build:                true
+  Install:              false
+  BuildDepends:         i3ipc, lwt.ppx
