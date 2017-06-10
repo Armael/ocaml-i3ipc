@@ -18,5 +18,5 @@ opam install i3ipc
 - As an example, [examples/i3_msg.ml](examples/i3_msg.ml) is a 60 lines
   reimplementation of `i3-msg` using this library.
 
-Running `make` at the root of the project should build the examples (as well as
-the library itself).
+Running `./configure --enable-examples && make` at the root of the project
+should build the examples (as well as the library itself).

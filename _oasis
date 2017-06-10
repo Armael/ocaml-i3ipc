@@ -12,6 +12,10 @@ AlphaFeatures: compiled_setup_ml, ocamlbuild_more_args
 
 Synopsis:    A pure OCaml implementation of the i3 IPC protocol
 
+Flag "examples"
+  Description:      Build examples
+  Default:          false
+
 Library "i3ipc"
   Path:             src/
   Modules:          I3ipc
@@ -29,6 +33,6 @@ Document i3ipc
 Executable i3_msg
   Path:                 examples
   MainIs:               i3_msg.ml
-  Build:                true
+  Build$:               flag(examples)
   Install:              false
   BuildDepends:         i3ipc, lwt.ppx
