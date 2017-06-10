@@ -15,7 +15,7 @@ opam install i3ipc
 ## Documentation
 
 - See the [API documentation](https://armael.github.io/ocaml-i3ipc/dev/I3ipc.html)
-- As an example, [examples/i3_msg.ml](examples/i3_msg.ml) is a 50 lines
+- As an example, [examples/i3_msg.ml](examples/i3_msg.ml) is a 60 lines
   reimplementation of `i3-msg` using this library.
 
 Running `make` at the root of the project should build the examples (as well as

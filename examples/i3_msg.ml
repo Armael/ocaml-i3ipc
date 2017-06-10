@@ -32,8 +32,13 @@ let main =
   let%lwt conn = I3ipc.connect () in
   match !message_type with
   | "command" ->
-    let%lwt outcome = I3ipc.command conn payload in
-    pp_list fmt (I3ipc.Reply.pp_command_outcome fmt) outcome |> Lwt.return
+    let%lwt outcomes = I3ipc.command conn payload in
+    List.iter (fun outcome ->
+      if not outcome.I3ipc.Reply.success then
+        Format.fprintf fmt "ERROR: %s\n\n%!"
+          (match outcome.I3ipc.Reply.error with Some s -> s | None -> "")
+    ) outcomes;
+    pp_list fmt (I3ipc.Reply.pp_command_outcome fmt) outcomes |> Lwt.return
   | "get_workspaces" ->
     let%lwt workspaces = I3ipc.get_workspaces conn in
     pp_list fmt (I3ipc.Reply.pp_workspace fmt) workspaces |> Lwt.return
