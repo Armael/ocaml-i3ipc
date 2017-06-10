@@ -22,7 +22,7 @@ module Reply = struct
   type command_outcome = {
     success: bool;
     error: (string option [@default None]);
-  } [@@deriving of_yojson, show]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type command_outcome_list =
     command_outcome list [@@deriving of_yojson, show]
@@ -32,7 +32,7 @@ module Reply = struct
     y: int;
     width: int;
     height: int;
-  } [@@deriving of_yojson, show]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type workspace = {
     num: int;
