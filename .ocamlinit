@@ -3,6 +3,7 @@
 #require "stdint";;
 #require "yojson";;
 #require "ppx_deriving_yojson";;
+#require "ppx_deriving.show";;
 #require "rresult";;
 #directory "_build/src";;
 #load "i3ipc.cmo";;
