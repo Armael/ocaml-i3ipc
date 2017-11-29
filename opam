@@ -24,6 +24,7 @@ depends: [
   "ppx_deriving_yojson"
   "result"
   "stdint"
+  "base-bytes"
 ]
 available: [ ocaml-version >= "4.02.0" ]
 tags: [ "i3" "ipc" "window-manager" ]

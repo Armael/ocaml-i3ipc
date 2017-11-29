@@ -419,7 +419,7 @@ let read_raw_msg conn =
   let header = Bytes.create (6 (* magic *) + 4 (* len *) + 4 (* ty *)) in
   let%lwt () = read conn.fd header ~pos:0 ~len:6 in
   if not (bytes_eq ~pos:0 ~len:6 header magic_bytes) then
-    raise (Protocol_error (Bad_magic_string (StdLabels.Bytes.sub ~pos:0 ~len:6 header)));
+    raise (Protocol_error (Bad_magic_string (StdLabels.Bytes.(to_string @@ sub ~pos:0 ~len:6 header))));
   let%lwt () = read conn.fd header ~pos:6 ~len:4 in
   let%lwt () = read conn.fd header ~pos:10 ~len:4 in
   let len = int32_of_bytes header 6 |> Uint32.to_int in
@@ -429,7 +429,7 @@ let read_raw_msg conn =
   Lwt.return (ty, Bytes.to_string payload)
 
 let write_raw_msg conn (ty, payload) =
-  let payload_len = Bytes.length payload in
+  let payload_len = String.length payload in
   let msg_buf = Bytes.create (6 + 4 + 4 + payload_len) in
   StdLabels.Bytes.blit ~src:magic_bytes ~src_pos:0 ~dst:msg_buf ~dst_pos:0 ~len:6;
   int32_to_bytes (Uint32.of_int payload_len) msg_buf 6;
@@ -514,26 +514,26 @@ let command conn c =
 
 let get_workspaces conn =
   handle_reply
-    (send_cmd_with_ty conn workspaces_ty Bytes.empty)
+    (send_cmd_with_ty conn workspaces_ty "")
     Reply.workspace_list_of_yojson
 
 let get_outputs conn =
   handle_reply
-    (send_cmd_with_ty conn outputs_ty Bytes.empty)
+    (send_cmd_with_ty conn outputs_ty "")
     Reply.output_list_of_yojson
 
 let get_tree conn =
   handle_reply
-    (send_cmd_with_ty conn tree_ty Bytes.empty)
+    (send_cmd_with_ty conn tree_ty "")
     Reply.node_of_yojson
 
 let get_marks conn =
   handle_reply
-    (send_cmd_with_ty conn marks_ty Bytes.empty)
+    (send_cmd_with_ty conn marks_ty "")
     Reply.mark_list_of_yojson
 
 let get_bar_ids conn =
-  let%lwt () = write_raw_msg conn (bar_config_ty, Bytes.empty) in
+  let%lwt () = write_raw_msg conn (bar_config_ty, "") in
   let%lwt (_, r) = next_reply conn
       (fun (ty, raw) ->
          ty = bar_config_ty &&
@@ -545,7 +545,7 @@ let get_bar_ids conn =
   handle_reply (Lwt.return r) Reply.bar_id_list_of_yojson
 
 let get_bar_config conn bar_id =
-  let%lwt () = write_raw_msg conn (bar_config_ty, Bytes.of_string bar_id) in
+  let%lwt () = write_raw_msg conn (bar_config_ty, bar_id) in
   let%lwt (_, r) = next_reply conn
       (fun (ty, raw) ->
          ty = bar_config_ty &&
@@ -558,7 +558,7 @@ let get_bar_config conn bar_id =
 
 let get_version conn =
   handle_reply
-    (send_cmd_with_ty conn version_ty Bytes.empty)
+    (send_cmd_with_ty conn version_ty "")
     Reply.version_of_yojson
 
 (******************************************************************************)
