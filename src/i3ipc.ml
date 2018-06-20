@@ -304,6 +304,7 @@ module Event = struct
   let window_change_of_yojson = function
     | `String "new" -> Result.Ok New
     | `String "close" -> Result.Ok Close
+    | `String "focus" -> Result.Ok Focus
     | `String "title" -> Result.Ok Title
     | `String "fullscreen_mode" -> Result.Ok FullscreenMode
     | `String "move" -> Result.Ok Move
