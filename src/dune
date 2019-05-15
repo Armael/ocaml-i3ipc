@@ -1,0 +1,8 @@
+(library
+  (name i3ipc)
+  (public_name i3ipc)
+  (modules
+    i3ipc)
+  (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show))
+  (libraries lwt lwt.unix lwt_ppx stdint)
+)

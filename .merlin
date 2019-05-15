@@ -1,8 +1,0 @@
-PKG lwt.unix
-PKG lwt.ppx
-PKG stdint
-PKG yojson
-PKG result
-PKG ppx_deriving.show
-PKG ppx_deriving_yojson
-FLG -safe-string

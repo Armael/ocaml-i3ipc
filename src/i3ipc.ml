@@ -18,6 +18,7 @@ exception Protocol_error of protocol_error
 (******************************************************************************)
 
 module Reply = struct
+  [@warning "-32"]
 
   type command_outcome = {
     success: bool;
@@ -252,6 +253,8 @@ end
 (******************************************************************************)
 
 module Event = struct
+  [@warning "-32"]
+
   type workspace_change =
     | Focus
     | Init
@@ -436,7 +439,7 @@ let write_raw_msg conn (ty, payload) =
   int32_to_bytes (Uint32.of_int payload_len) msg_buf 6;
   int32_to_bytes ty msg_buf 10;
   Bytes.blit_string payload 0 msg_buf 14 payload_len;
-  write conn.fd msg_buf 0 (Bytes.length msg_buf)
+  write conn.fd msg_buf ~pos:0 ~len:(Bytes.length msg_buf)
 
 (******************************************************************************)
 
@@ -477,7 +480,7 @@ let rec next_reply conn p =
     let%lwt () = read_next_message conn in
     next_reply conn p
 
-let rec next_reply_with_ty conn ty =
+let next_reply_with_ty conn ty =
   next_reply conn (fun (ty', _) -> ty = ty')
 
 let send_cmd_with_ty conn ty payload =
@@ -495,7 +498,7 @@ let tree_ty = Uint32.of_int 4
 let marks_ty = Uint32.of_int 5
 let bar_config_ty = Uint32.of_int 6
 let version_ty = Uint32.of_int 7
-let binding_modes_ty = Uint32.of_int 8
+let binding_modes_ty = Uint32.of_int 8 [@@warning "-32"]
 
 let ignore_error = function
   | Result.Ok x -> x
