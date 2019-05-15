@@ -1,9 +1,9 @@
 # OASIS_START
-# DO NOT EDIT (digest: e490c0a0421aaf3b6912fab6f0ec9c93)
+# DO NOT EDIT (digest: 94d954a63b3e906b69511975b65c5867)
 version = "0.1"
 description = "A pure OCaml implementation of the i3 IPC protocol"
 requires =
-"lwt lwt.unix lwt.ppx stdint result ppx_deriving_yojson ppx_deriving.show"
+"lwt lwt.unix lwt_ppx stdint result ppx_deriving_yojson ppx_deriving.show"
 archive(byte) = "i3ipc.cma"
 archive(byte, plugin) = "i3ipc.cma"
 archive(native) = "i3ipc.cmxa"

@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 36dfe09107bcdaa50645741ff21b8c79)
+# DO NOT EDIT (digest: d6ad719545d3ebb22a02c6f6202a018f)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -17,8 +17,8 @@ true: annot, bin_annot
 # Library i3ipc
 "src/i3ipc.cmxs": use_i3ipc
 <src/*.ml{,i,y}>: package(lwt)
-<src/*.ml{,i,y}>: package(lwt.ppx)
 <src/*.ml{,i,y}>: package(lwt.unix)
+<src/*.ml{,i,y}>: package(lwt_ppx)
 <src/*.ml{,i,y}>: package(ppx_deriving.show)
 <src/*.ml{,i,y}>: package(ppx_deriving_yojson)
 <src/*.ml{,i,y}>: package(result)
@@ -27,6 +27,7 @@ true: annot, bin_annot
 "examples/i3_msg.byte": package(lwt)
 "examples/i3_msg.byte": package(lwt.ppx)
 "examples/i3_msg.byte": package(lwt.unix)
+"examples/i3_msg.byte": package(lwt_ppx)
 "examples/i3_msg.byte": package(ppx_deriving.show)
 "examples/i3_msg.byte": package(ppx_deriving_yojson)
 "examples/i3_msg.byte": package(result)
@@ -35,6 +36,7 @@ true: annot, bin_annot
 <examples/*.ml{,i,y}>: package(lwt)
 <examples/*.ml{,i,y}>: package(lwt.ppx)
 <examples/*.ml{,i,y}>: package(lwt.unix)
+<examples/*.ml{,i,y}>: package(lwt_ppx)
 <examples/*.ml{,i,y}>: package(ppx_deriving.show)
 <examples/*.ml{,i,y}>: package(ppx_deriving_yojson)
 <examples/*.ml{,i,y}>: package(result)
