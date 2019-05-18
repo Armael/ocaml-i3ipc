@@ -60,6 +60,9 @@ let main =
   | "get_version" ->
     let%lwt version = I3ipc.get_version conn in
     I3ipc.Reply.pp_version fmt version |> Lwt.return
+  | "get_binding_modes" ->
+    let%lwt binding_modes = I3ipc.get_binding_modes conn in
+    I3ipc.Reply.pp_binding_modes fmt binding_modes |> Lwt.return
   | _ -> Format.fprintf Format.err_formatter "Unsupported message type"; exit 1
 
 let () = Lwt_main.run main

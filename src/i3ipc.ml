@@ -248,6 +248,9 @@ module Reply = struct
 
   let result_of_command_outcome { success; error } =
     if success then Result.Ok () else Result.Error (error |? "")
+
+  type binding_modes = string list
+    [@@deriving of_yojson, show]
 end
 
 (******************************************************************************)
@@ -498,7 +501,12 @@ let tree_ty = Uint32.of_int 4
 let marks_ty = Uint32.of_int 5
 let bar_config_ty = Uint32.of_int 6
 let version_ty = Uint32.of_int 7
-let binding_modes_ty = Uint32.of_int 8 [@@warning "-32"]
+let binding_modes_ty = Uint32.of_int 8
+(* TODO
+let config_ty = Uint32.of_int 9(* TODO *)
+let send_tick_ty = Uint32.of_int 10(* TODO *)
+let sync_ty = Uint32.of_int 11(* TODO *)
+*)
 
 let ignore_error = function
   | Result.Ok x -> x
@@ -565,6 +573,10 @@ let get_version conn =
     (send_cmd_with_ty conn version_ty "")
     Reply.version_of_yojson
 
+let get_binding_modes conn =
+  handle_reply
+    (send_cmd_with_ty conn binding_modes_ty "")
+    Reply.binding_modes_of_yojson
 (******************************************************************************)
 
 type subscription =
