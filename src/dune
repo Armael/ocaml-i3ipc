@@ -4,5 +4,7 @@
   (modules
     i3ipc)
   (preprocess (pps lwt_ppx ppx_deriving_yojson ppx_deriving.show))
-  (libraries lwt lwt.unix lwt_ppx stdint)
-)
+  (libraries lwt lwt.unix lwt_ppx stdint))
+
+(documentation
+  (package i3ipc))

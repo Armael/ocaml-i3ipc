@@ -10,10 +10,12 @@ dev-repo: "git+https://github.com/Armael/ocaml-i3ipc"
 doc: "https://armael.github.io/ocaml-i3ipc/0.1/"
 build: [
   ["dune" "build" "-j" jobs "-p" name]
+  ["dune" "build" "@doc"] {with-doc}
 ]
 depends: [
   "ocaml" {>= "4.02.0"}
   "dune" { build }
+  "odoc" {with-doc}
   "lwt"
   "lwt_ppx"
   "ppx_deriving_yojson"
