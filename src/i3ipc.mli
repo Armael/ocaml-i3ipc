@@ -139,6 +139,10 @@ module Reply : sig
     config : string
   }
 
+  type tick = {
+    tick_success : bool
+  }
+
   (** {3 Pretty-printing} *)
 
   val pp_command_outcome : Format.formatter -> command_outcome -> unit
@@ -155,6 +159,7 @@ module Reply : sig
   val pp_version : Format.formatter -> version -> unit
   val pp_binding_modes : Format.formatter -> binding_modes -> unit
   val pp_config : Format.formatter -> config -> unit
+  val pp_tick : Format.formatter -> bool -> unit
 end
 
 (** Type definitions for the events that can be subscribed to. *)
@@ -311,3 +316,6 @@ val get_binding_modes : connection -> Reply.binding_modes Lwt.t
 
 (** Get the config file as loaded by i3 most recently. *)
 val get_config : connection -> Reply.config Lwt.t
+
+(** Sends a tick event with the specified payload. *)
+val send_tick : connection -> string -> bool Lwt.t
