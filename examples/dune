@@ -1,0 +1,4 @@
+(executable
+  (name i3_msg)
+  (preprocess (pps lwt_ppx))
+  (libraries i3ipc))
