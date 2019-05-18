@@ -251,6 +251,13 @@ module Reply = struct
 
   type binding_modes = string list
     [@@deriving of_yojson, show]
+
+  type config = {
+    config : string
+  } [@@deriving of_yojson, show]
+
+  let pp_config fmt config =
+    Format.pp_print_string fmt config.config
 end
 
 (******************************************************************************)
@@ -502,8 +509,8 @@ let marks_ty = Uint32.of_int 5
 let bar_config_ty = Uint32.of_int 6
 let version_ty = Uint32.of_int 7
 let binding_modes_ty = Uint32.of_int 8
+let config_ty = Uint32.of_int 9
 (* TODO
-let config_ty = Uint32.of_int 9(* TODO *)
 let send_tick_ty = Uint32.of_int 10(* TODO *)
 let sync_ty = Uint32.of_int 11(* TODO *)
 *)
@@ -577,6 +584,11 @@ let get_binding_modes conn =
   handle_reply
     (send_cmd_with_ty conn binding_modes_ty "")
     Reply.binding_modes_of_yojson
+
+let get_config conn =
+  handle_reply
+    (send_cmd_with_ty conn config_ty "")
+    Reply.config_of_yojson
 (******************************************************************************)
 
 type subscription =
