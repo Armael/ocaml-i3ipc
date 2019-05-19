@@ -233,6 +233,11 @@ module Event : sig
     | Restart (** i3 is shutting down due to a restart requested by the user *)
     | Exit    (** i3 is shutting down due to an exit requested by the user *)
 
+  type tick_event_info = {
+    first : bool;
+    payload : string
+  }
+
   type t =
     | Workspace of workspace_event_info
     (** Sent when the user switches to a different workspace, when a new
@@ -269,7 +274,9 @@ module Event : sig
         your program survive an i3 restart, you must subscribe to this event and
         handle the subsequent exception. *)
 
-    (* | Tick TODO *)
+    | Tick of tick_event_info
+    (** This event is triggered by a subscription to tick events or by a
+        SEND_TICK message. *)
 
   (** {3 Pretty-printing} *)
 
@@ -286,6 +293,7 @@ module Event : sig
   val pp_binding : Format.formatter -> binding -> unit
   val pp_binding_event_info : Format.formatter -> binding_event_info -> unit
   val pp_shutdown_reason : Format.formatter -> shutdown_reason -> unit
+  val pp_tick_event_info : Format.formatter -> tick_event_info -> unit
   val pp : Format.formatter -> t -> unit
 end
 
@@ -310,6 +318,7 @@ type subscription =
   | BarConfig
   | Binding
   | Shutdown
+  | Tick
 
 (** Subscribe to certain events. *)
 val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
