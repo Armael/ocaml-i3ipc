@@ -7,6 +7,9 @@ clean:
 docs:
 	dune build @doc
 
+examples:
+	dune build @examples
+
 gh-pages: docs
 	git checkout gh-pages
 	git rm -rf dev/*
@@ -17,4 +20,4 @@ gh-pages: docs
 	git push
 	git checkout master
 
-.PHONY: all clean docs gh-pages
+.PHONY: all clean docs gh-pages examples

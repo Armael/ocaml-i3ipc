@@ -1,0 +1,8 @@
+(executable
+  (name i3_msg)
+  (preprocess (pps lwt_ppx))
+  (libraries i3ipc lwt))
+
+(alias
+  (name examples)
+  (deps i3_msg.exe))
