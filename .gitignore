@@ -1,2 +1,3 @@
 _build
-setup.*
+.merlin
+i3ipc.install

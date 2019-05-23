@@ -8,19 +8,11 @@ homepage: "https://github.com/Armael/ocaml-i3ipc"
 bug-reports: "https://github.com/Armael/ocaml-i3ipc/issues"
 dev-repo: "https://github.com/Armael/ocaml-i3ipc"
 build: [
-  ["ocaml" "setup.ml" "-configure" "--prefix" prefix]
-  ["ocaml" "setup.ml" "-build"]
-]
-install: [
-  [make "install"]
-]
-remove: [
-  ["ocamlfind" "remove" "i3ipc"]
+  ["dune" "build" "-p" name "-j" jobs]
 ]
 depends: [
   "lwt"
-  "ocamlbuild" {build}
-  "ocamlfind" {build}
+  "dune" {build}
   "ppx_deriving_yojson"
   "result"
   "stdint"

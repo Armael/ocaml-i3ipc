@@ -1,6 +1,8 @@
 open Stdint
 module Json = Yojson.Safe
 
+[@@@warning "-32"]
+
 let (|?) o x =
   match o with
   | None -> x
@@ -436,7 +438,7 @@ let write_raw_msg conn (ty, payload) =
   int32_to_bytes (Uint32.of_int payload_len) msg_buf 6;
   int32_to_bytes ty msg_buf 10;
   Bytes.blit_string payload 0 msg_buf 14 payload_len;
-  write conn.fd msg_buf 0 (Bytes.length msg_buf)
+  write conn.fd msg_buf ~pos:0 ~len:(Bytes.length msg_buf)
 
 (******************************************************************************)
 
@@ -477,7 +479,7 @@ let rec next_reply conn p =
     let%lwt () = read_next_message conn in
     next_reply conn p
 
-let rec next_reply_with_ty conn ty =
+let next_reply_with_ty conn ty =
   next_reply conn (fun (ty', _) -> ty = ty')
 
 let send_cmd_with_ty conn ty payload =

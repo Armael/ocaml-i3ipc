@@ -1,0 +1,5 @@
+(library
+  (name i3ipc)
+  (public_name i3ipc)
+  (preprocess (pps ppx_deriving_yojson ppx_deriving.show lwt_ppx))
+  (libraries result stdint lwt lwt.unix ppx_deriving_yojson.runtime))
