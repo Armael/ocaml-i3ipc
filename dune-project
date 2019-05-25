@@ -1,3 +1,2 @@
-(lang dune 1.9)
+(lang dune 1.8)
 (name i3ipc)
-(version 0.1.4)

@@ -1,6 +1,8 @@
 open Stdint
 module Json = Yojson.Safe
 
+[@@@warning "-32"]
+
 let (|?) o x =
   match o with
   | None -> x
