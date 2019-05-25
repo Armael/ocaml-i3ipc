@@ -75,7 +75,7 @@ module Reply : sig
   type node = {
     nodes: node list;
     floating_nodes: node list;
-    id: int32;
+    id: Stdint.Uint64.t;
     name: string option;
     nodetype: node_type;
     border: node_border;
