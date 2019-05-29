@@ -37,6 +37,7 @@ module Reply : sig
   type output = {
     name: string;
     active: bool;
+    primary: bool;
     current_workspace: string option;
     rect: rect;
   }
@@ -63,8 +64,17 @@ module Reply : sig
     | Output
     | Unknown of string
 
+  type window_properties = {
+    class_: string option;
+    instance: string option;
+    title: string option;
+    transient_for: string option;
+    window_role: string option;
+  }
+
   type node = {
     nodes: node list;
+    floating_nodes: node list;
     id: int32;
     name: string option;
     nodetype: node_type;
@@ -77,8 +87,10 @@ module Reply : sig
     deco_rect: rect;
     geometry: rect;
     window: int option;
+    window_properties: window_properties option;
     urgent: bool;
     focused: bool;
+    focus: int32 list;
   }
 
   type mark = string

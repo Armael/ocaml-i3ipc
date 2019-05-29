@@ -52,6 +52,7 @@ module Reply = struct
   type output = {
     name: string;
     active: bool;
+    primary: bool;
     current_workspace: string option;
     rect: rect;
   } [@@deriving of_yojson { strict = false }, show]
@@ -109,8 +110,17 @@ module Reply = struct
     | `String s -> Result.Ok (Unknown s)
     | j -> Result.Error ("Reply.node_layout_of_yojson: " ^ Json.to_string j)
 
+  type window_properties = {
+    class_: string option [@key "class"];
+    instance: string option;
+    title: string option;
+    transient_for: string option;
+    window_role: string option [@default None];
+  } [@@deriving of_yojson { strict = false }, show]
+
   type node = {
     nodes : (node list [@default []]);
+    floating_nodes: (node list [@default []]);
     id: int32;
     name: string option;
     nodetype: node_type [@key "type"];
@@ -123,8 +133,10 @@ module Reply = struct
     deco_rect: rect;
     geometry: rect;
     window: int option;
+    window_properties: window_properties option [@default None];
     urgent: bool;
     focused: bool;
+    focus: int32 list;
   } [@@deriving of_yojson { strict = false }, show]
 
   type mark = string [@@deriving yojson, show]
