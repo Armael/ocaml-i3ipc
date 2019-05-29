@@ -134,10 +134,20 @@ module Reply = struct
     window_role: string option [@default None];
   } [@@deriving of_yojson { strict = false }, show]
 
+  type id = string
+
+  let id_of_yojson id_j =
+    match id_j with
+    | `Int i -> Result.Ok (string_of_int i)
+    | `Intlit s -> Result.Ok s
+    | _ -> Result.Error ("not an integer literal: "^(Yojson.Safe.to_string id_j))
+
+  let pp_id fmt i = Format.pp_print_string fmt i
+
   type node = {
     nodes : (node list [@default []]);
     floating_nodes: (node list [@default []]);
-    id: Uint64.t;
+    id: id;
     name: string option;
     nodetype: node_type [@key "type"];
     border: node_border;
