@@ -72,10 +72,12 @@ module Reply : sig
     window_role: string option;
   }
 
+  type id = string
+
   type node = {
     nodes: node list;
     floating_nodes: node list;
-    id: Stdint.Uint64.t;
+    id: id;
     name: string option;
     nodetype: node_type;
     border: node_border;
