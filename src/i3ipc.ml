@@ -249,6 +249,9 @@ module Reply = struct
 
   let result_of_command_outcome { success; error } =
     if success then Result.Ok () else Result.Error (error |? "")
+
+  type binding_modes = string list
+    [@@deriving of_yojson, show]
 end
 
 (******************************************************************************)
@@ -564,6 +567,10 @@ let get_version conn =
     (send_cmd_with_ty conn version_ty "")
     Reply.version_of_yojson
 
+let get_binding_modes conn =
+  handle_reply
+    (send_cmd_with_ty conn binding_modes_ty "")
+    Reply.binding_modes_of_yojson
 (******************************************************************************)
 
 type subscription =
