@@ -373,6 +373,15 @@ module Event = struct
     binding: binding;
   } [@@deriving of_yojson { strict = false }, show]
 
+  type shutdown_reason =
+    | Restart
+    | Exit
+  [@@deriving show]
+
+  type shutdown_event_info = {
+    change : string
+  } [@@deriving of_yojson, show]
+
   type t =
     | Workspace of workspace_event_info
     | Output of output_event_info
@@ -380,7 +389,11 @@ module Event = struct
     | Window of window_event_info
     | BarConfig of bar_config_event_info
     | Binding of binding_event_info
+    | Shutdown of shutdown_reason
   [@@deriving show]
+
+  let unfold_shut_info sev =
+    sev.change
 end
 
 (******************************************************************************)
@@ -596,7 +609,7 @@ let get_config conn =
   Lwt.return protocol_reply.Reply.config
 
 let send_tick conn payload =
-  let%lwt protocol_reply = 
+  let%lwt protocol_reply =
     handle_reply
       (send_cmd_with_ty conn send_tick_ty payload)
       Reply.tick_of_yojson in
@@ -611,6 +624,7 @@ type subscription =
   | Window
   | BarConfig
   | Binding
+  | Shutdown
 
 let subscription_to_yojson = function
   | Workspace -> `String "workspace"
@@ -619,6 +633,7 @@ let subscription_to_yojson = function
   | Window -> `String "window"
   | BarConfig -> `String "barconfig_update"
   | Binding -> `String "binding"
+  | Shutdown -> `String "shutdown"
 
 type subscription_list =
   subscription list [@@deriving to_yojson]
@@ -640,6 +655,16 @@ let event_of_raw_event (ty, payload) =
   | 3 -> Event.Window (Event.window_event_info_of_yojson j |> ignore_error)
   | 4 -> Event.BarConfig (Event.bar_config_event_info_of_yojson j |> ignore_error)
   | 5 -> Event.Binding (Event.binding_event_info_of_yojson j |> ignore_error)
+  | 6 -> Event.Shutdown (
+    let shutdown_event_info =
+      Event.shutdown_event_info_of_yojson j
+      |> ignore_error
+      |> Event.unfold_shut_info in
+    match shutdown_event_info with
+    | "restart" -> Restart
+    | "exit" -> Exit
+    | v -> raise (Protocol_error (Bad_reply v))
+  )
   | _ -> raise (Protocol_error (Unknown_type ty))
 
 let next_event conn =

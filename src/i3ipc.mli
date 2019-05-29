@@ -229,13 +229,47 @@ module Event : sig
     binding: binding;
   }
 
+  type shutdown_reason =
+    | Restart (** i3 is shutting down due to a restart requested by the user *)
+    | Exit    (** i3 is shutting down due to an exit requested by the user *)
+
   type t =
     | Workspace of workspace_event_info
+    (** Sent when the user switches to a different workspace, when a new
+        workspace is initialized or when a workspace is removed
+        (because the last client vanished). *)
+
     | Output of output_event_info
+    (** Sent when RandR issues a change notification (of either screens,
+        outputs, CRTCs or output properties). *)
+
     | Mode of mode_event_info
+    (** Sent whenever i3 changes its binding mode. *)
+
     | Window of window_event_info
+    (** Sent when a client’s window is successfully reparented (that is when i3
+        has finished fitting it into a container), when a window received input
+        focus or when certain properties of the window have changed. *)
+
     | BarConfig of bar_config_event_info
+    (** Sent when the hidden_state or mode field in the barconfig of any bar
+        instance was updated and when the config is reloaded. *)
+
     | Binding of binding_event_info
+    (** Sent when a configured command binding is triggered with the keyboard or
+        mouse *)
+
+    | Shutdown of shutdown_reason
+    (** Sent when the ipc shuts down because of a restart or exit by user
+        command.
+
+      {b Important note:} immediately after the client program receives a
+        [Shutdown] event i3 wil close the socket with the client and an
+        exception [Protocol_error] will be raised by this library: if you want
+        your program survive an i3 restart, you must subscribe to this event and
+        handle the subsequent exception. *)
+
+    (* | Tick TODO *)
 
   (** {3 Pretty-printing} *)
 
@@ -251,6 +285,7 @@ module Event : sig
   val pp_input_type : Format.formatter -> input_type -> unit
   val pp_binding : Format.formatter -> binding -> unit
   val pp_binding_event_info : Format.formatter -> binding_event_info -> unit
+  val pp_shutdown_reason : Format.formatter -> shutdown_reason -> unit
   val pp : Format.formatter -> t -> unit
 end
 
@@ -274,6 +309,7 @@ type subscription =
   | Window
   | BarConfig
   | Binding
+  | Shutdown
 
 (** Subscribe to certain events. *)
 val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
