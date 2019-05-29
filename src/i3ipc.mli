@@ -135,6 +135,10 @@ module Reply : sig
 
   type binding_modes = string list
 
+  type config = {
+    config : string
+  }
+
   (** {3 Pretty-printing} *)
 
   val pp_command_outcome : Format.formatter -> command_outcome -> unit
@@ -150,6 +154,7 @@ module Reply : sig
   val pp_bar_config : Format.formatter -> bar_config -> unit
   val pp_version : Format.formatter -> version -> unit
   val pp_binding_modes : Format.formatter -> binding_modes -> unit
+  val pp_config : Format.formatter -> config -> unit
 end
 
 (** Type definitions for the events that can be subscribed to. *)
@@ -303,3 +308,6 @@ val get_version : connection -> Reply.version Lwt.t
 
 (** Get binding modes of i3. *)
 val get_binding_modes : connection -> Reply.binding_modes Lwt.t
+
+(** Get the config file as loaded by i3 most recently. *)
+val get_config : connection -> Reply.config Lwt.t
