@@ -259,6 +259,13 @@ module Reply = struct
 
   let pp_config fmt config =
     Format.pp_print_string fmt config.config
+
+  type tick = {
+    tick_success : bool [@key "success"]
+  } [@@deriving of_yojson, show]
+
+  let pp_tick fmt tick =
+    Format.pp_print_bool fmt tick
 end
 
 (******************************************************************************)
@@ -509,6 +516,7 @@ let bar_config_ty = Uint32.of_int 6
 let version_ty = Uint32.of_int 7
 let binding_modes_ty = Uint32.of_int 8
 let config_ty = Uint32.of_int 9
+let send_tick_ty = Uint32.of_int 10
 
 let ignore_error = function
   | Result.Ok x -> x
@@ -584,6 +592,14 @@ let get_config conn =
   handle_reply
     (send_cmd_with_ty conn config_ty "")
     Reply.config_of_yojson
+
+let send_tick conn payload =
+  let%lwt protocol_reply = 
+    handle_reply
+      (send_cmd_with_ty conn send_tick_ty payload)
+      Reply.tick_of_yojson in
+  Lwt.return protocol_reply.Reply.tick_success
+
 (******************************************************************************)
 
 type subscription =
