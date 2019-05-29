@@ -17,6 +17,21 @@ type protocol_error =
 
 exception Protocol_error of protocol_error
 
+module Uint64 = struct
+  include Uint64
+
+  let of_yojson (u_j : Yojson.Safe.json) =
+    match u_j with
+    | `Int i -> Result.Ok (Uint64.of_int i)
+    | `Intlit s -> begin
+      try Result.Ok (Uint64.of_string s)
+      with Invalid_argument e -> Result.Error e
+    end
+    | _ -> Result.Error ("not an integer literal: "^(Yojson.Safe.to_string u_j))
+
+  let pp fmt ui = Format.pp_print_string fmt (to_string ui)
+end
+
 (******************************************************************************)
 
 module Reply = struct
@@ -121,7 +136,7 @@ module Reply = struct
   type node = {
     nodes : (node list [@default []]);
     floating_nodes: (node list [@default []]);
-    id: int32;
+    id: Uint64.t;
     name: string option;
     nodetype: node_type [@key "type"];
     border: node_border;
