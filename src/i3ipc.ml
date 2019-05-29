@@ -382,6 +382,11 @@ module Event = struct
     change : string
   } [@@deriving of_yojson, show]
 
+  type tick_event_info = {
+    first : bool;
+    payload : string
+  } [@@deriving of_yojson, show]
+
   type t =
     | Workspace of workspace_event_info
     | Output of output_event_info
@@ -390,6 +395,7 @@ module Event = struct
     | BarConfig of bar_config_event_info
     | Binding of binding_event_info
     | Shutdown of shutdown_reason
+    | Tick of tick_event_info
   [@@deriving show]
 
   let unfold_shut_info sev =
@@ -625,6 +631,7 @@ type subscription =
   | BarConfig
   | Binding
   | Shutdown
+  | Tick
 
 let subscription_to_yojson = function
   | Workspace -> `String "workspace"
@@ -634,6 +641,7 @@ let subscription_to_yojson = function
   | BarConfig -> `String "barconfig_update"
   | Binding -> `String "binding"
   | Shutdown -> `String "shutdown"
+  | Tick -> `String "tick"
 
 type subscription_list =
   subscription list [@@deriving to_yojson]
@@ -665,6 +673,7 @@ let event_of_raw_event (ty, payload) =
     | "exit" -> Exit
     | v -> raise (Protocol_error (Bad_reply v))
   )
+  | 7 -> Event.Tick (Event.tick_event_info_of_yojson j |> ignore_error)
   | _ -> raise (Protocol_error (Unknown_type ty))
 
 let next_event conn =
