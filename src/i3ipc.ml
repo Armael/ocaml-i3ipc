@@ -258,7 +258,7 @@ module Reply = struct
   } [@@deriving of_yojson, show]
 
   let pp_config fmt config =
-    Format.pp_print_string fmt config.config
+    Format.pp_print_string fmt config
 
   type tick = {
     tick_success : bool [@key "success"]
@@ -589,9 +589,11 @@ let get_binding_modes conn =
     Reply.binding_modes_of_yojson
 
 let get_config conn =
-  handle_reply
-    (send_cmd_with_ty conn config_ty "")
-    Reply.config_of_yojson
+  let%lwt protocol_reply =
+    handle_reply
+      (send_cmd_with_ty conn config_ty "")
+      Reply.config_of_yojson in
+  Lwt.return protocol_reply.Reply.config
 
 let send_tick conn payload =
   let%lwt protocol_reply = 

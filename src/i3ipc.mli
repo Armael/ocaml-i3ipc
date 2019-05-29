@@ -158,7 +158,7 @@ module Reply : sig
   val pp_bar_config : Format.formatter -> bar_config -> unit
   val pp_version : Format.formatter -> version -> unit
   val pp_binding_modes : Format.formatter -> binding_modes -> unit
-  val pp_config : Format.formatter -> config -> unit
+  val pp_config : Format.formatter -> string -> unit
   val pp_tick : Format.formatter -> bool -> unit
 end
 
@@ -315,7 +315,7 @@ val get_version : connection -> Reply.version Lwt.t
 val get_binding_modes : connection -> Reply.binding_modes Lwt.t
 
 (** Get the config file as loaded by i3 most recently. *)
-val get_config : connection -> Reply.config Lwt.t
+val get_config : connection -> string Lwt.t
 
 (** Sends a tick event with the specified payload. *)
 val send_tick : connection -> string -> bool Lwt.t
