@@ -14,7 +14,9 @@ opam install i3ipc
 
 ## Documentation
 
-- See the [API documentation](https://armael.github.io/ocaml-i3ipc/dev/i3ipc/index.html)
+- See the API documentation, version:
+  [dev](https://armael.github.io/ocaml-i3ipc/dev/i3ipc/index.html),
+  [0.1](https://armael.github.io/ocaml-i3ipc/0.1/i3ipc/index.html)
 - As an example, [examples/i3_msg.ml](examples/i3_msg.ml) is a 60 lines
   reimplementation of `i3-msg` using this library.
 
