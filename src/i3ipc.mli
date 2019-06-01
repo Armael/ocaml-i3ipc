@@ -79,6 +79,7 @@ module Reply : sig
     floating_nodes: node list;
     id: id;
     name: string option;
+    num: int option;
     nodetype: node_type;
     border: node_border;
     current_border_width: int;

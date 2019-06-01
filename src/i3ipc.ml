@@ -133,6 +133,7 @@ module Reply = struct
     floating_nodes: (node list [@default []]);
     id: id;
     name: string option;
+    num: int option [@default None];
     nodetype: node_type [@key "type"];
     border: node_border;
     current_border_width: int;
