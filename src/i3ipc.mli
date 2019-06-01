@@ -37,6 +37,7 @@ module Reply : sig
   type output = {
     name: string;
     active: bool;
+    primary: bool;
     current_workspace: string option;
     rect: rect;
   }
@@ -63,10 +64,22 @@ module Reply : sig
     | Output
     | Unknown of string
 
+  type window_properties = {
+    class_: string option;
+    instance: string option;
+    title: string option;
+    transient_for: string option;
+    window_role: string option;
+  }
+
+  type node_id = string
+
   type node = {
     nodes: node list;
-    id: int32;
+    floating_nodes: node list;
+    id: node_id;
     name: string option;
+    num: int option;
     nodetype: node_type;
     border: node_border;
     current_border_width: int;
@@ -77,8 +90,10 @@ module Reply : sig
     deco_rect: rect;
     geometry: rect;
     window: int option;
+    window_properties: window_properties option;
     urgent: bool;
     focused: bool;
+    focus: node_id list;
   }
 
   type mark = string
@@ -133,6 +148,12 @@ module Reply : sig
     loaded_config_file_name: string;
   }
 
+  type binding_modes = string list
+
+  type config = {
+    config : string
+  }
+
   (** {3 Pretty-printing} *)
 
   val pp_command_outcome : Format.formatter -> command_outcome -> unit
@@ -147,6 +168,8 @@ module Reply : sig
   val pp_bar_colors : Format.formatter -> bar_colors -> unit
   val pp_bar_config : Format.formatter -> bar_config -> unit
   val pp_version : Format.formatter -> version -> unit
+  val pp_binding_modes : Format.formatter -> binding_modes -> unit
+  val pp_config : Format.formatter -> config -> unit
 end
 
 (** Type definitions for the events that can be subscribed to. *)
@@ -216,13 +239,54 @@ module Event : sig
     binding: binding;
   }
 
+  type shutdown_reason =
+    | Restart (** i3 is shutting down due to a restart requested by the user *)
+    | Exit    (** i3 is shutting down due to an exit requested by the user *)
+
+  type tick_event_info = {
+    first : bool;
+    payload : string
+  }
+
   type t =
     | Workspace of workspace_event_info
+    (** Sent when the user switches to a different workspace, when a new
+        workspace is initialized or when a workspace is removed
+        (because the last client vanished). *)
+
     | Output of output_event_info
+    (** Sent when RandR issues a change notification (of either screens,
+        outputs, CRTCs or output properties). *)
+
     | Mode of mode_event_info
+    (** Sent whenever i3 changes its binding mode. *)
+
     | Window of window_event_info
+    (** Sent when a client’s window is successfully reparented (that is when i3
+        has finished fitting it into a container), when a window received input
+        focus or when certain properties of the window have changed. *)
+
     | BarConfig of bar_config_event_info
+    (** Sent when the hidden_state or mode field in the barconfig of any bar
+        instance was updated and when the config is reloaded. *)
+
     | Binding of binding_event_info
+    (** Sent when a configured command binding is triggered with the keyboard or
+        mouse *)
+
+    | Shutdown of shutdown_reason
+    (** Sent when the ipc shuts down because of a restart or exit by user
+        command.
+
+      {b Important note:} immediately after the client program receives a
+        [Shutdown] event i3 wil close the socket with the client and an
+        exception [Protocol_error] will be raised by this library: if you want
+        your program survive an i3 restart, you must subscribe to this event and
+        handle the subsequent exception. *)
+
+    | Tick of tick_event_info
+    (** This event is triggered by a subscription to tick events or by a
+        SEND_TICK message. *)
 
   (** {3 Pretty-printing} *)
 
@@ -238,6 +302,8 @@ module Event : sig
   val pp_input_type : Format.formatter -> input_type -> unit
   val pp_binding : Format.formatter -> binding -> unit
   val pp_binding_event_info : Format.formatter -> binding_event_info -> unit
+  val pp_shutdown_reason : Format.formatter -> shutdown_reason -> unit
+  val pp_tick_event_info : Format.formatter -> tick_event_info -> unit
   val pp : Format.formatter -> t -> unit
 end
 
@@ -261,6 +327,8 @@ type subscription =
   | Window
   | BarConfig
   | Binding
+  | Shutdown
+  | Tick
 
 (** Subscribe to certain events. *)
 val subscribe : connection -> subscription list -> Reply.command_outcome Lwt.t
@@ -297,3 +365,12 @@ val get_bar_config : connection -> Reply.bar_id -> Reply.bar_config Lwt.t
 
 (** Get the version of i3. *)
 val get_version : connection -> Reply.version Lwt.t
+
+(** Get binding modes of i3. *)
+val get_binding_modes : connection -> Reply.binding_modes Lwt.t
+
+(** Get the config file as loaded by i3 most recently. *)
+val get_config : connection -> Reply.config Lwt.t
+
+(** Sends a tick event with the specified payload. *)
+val send_tick : connection -> string -> bool Lwt.t

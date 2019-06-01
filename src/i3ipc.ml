@@ -52,6 +52,7 @@ module Reply = struct
   type output = {
     name: string;
     active: bool;
+    primary: bool;
     current_workspace: string option;
     rect: rect;
   } [@@deriving of_yojson { strict = false }, show]
@@ -109,10 +110,30 @@ module Reply = struct
     | `String s -> Result.Ok (Unknown s)
     | j -> Result.Error ("Reply.node_layout_of_yojson: " ^ Json.to_string j)
 
+  type window_properties = {
+    class_: string option [@key "class"];
+    instance: string option;
+    title: string option;
+    transient_for: string option;
+    window_role: string option [@default None];
+  } [@@deriving of_yojson { strict = false }, show]
+
+  type node_id = string
+
+  let node_id_of_yojson id_j =
+    match id_j with
+    | `Int i -> Result.Ok (string_of_int i)
+    | `Intlit s -> Result.Ok s
+    | _ -> Result.Error ("not an integer literal: "^(Yojson.Safe.to_string id_j))
+
+  let pp_node_id fmt i = Format.pp_print_string fmt i
+
   type node = {
     nodes : (node list [@default []]);
-    id: int32;
+    floating_nodes: (node list [@default []]);
+    id: node_id;
     name: string option;
+    num: int option [@default None];
     nodetype: node_type [@key "type"];
     border: node_border;
     current_border_width: int;
@@ -123,8 +144,10 @@ module Reply = struct
     deco_rect: rect;
     geometry: rect;
     window: int option;
+    window_properties: window_properties option [@default None];
     urgent: bool;
     focused: bool;
+    focus: node_id list;
   } [@@deriving of_yojson { strict = false }, show]
 
   type mark = string [@@deriving yojson, show]
@@ -249,6 +272,17 @@ module Reply = struct
 
   let result_of_command_outcome { success; error } =
     if success then Result.Ok () else Result.Error (error |? "")
+
+  type binding_modes = string list
+    [@@deriving of_yojson, show]
+
+  type config = {
+    config : string
+  } [@@deriving of_yojson { strict = false }, show]
+
+  type tick = {
+    tick_success : bool [@key "success"]
+  } [@@deriving of_yojson, show]
 end
 
 (******************************************************************************)
@@ -356,6 +390,20 @@ module Event = struct
     binding: binding;
   } [@@deriving of_yojson { strict = false }, show]
 
+  type shutdown_reason =
+    | Restart
+    | Exit
+  [@@deriving show]
+
+  type shutdown_event_info = {
+    change : string
+  } [@@deriving of_yojson, show]
+
+  type tick_event_info = {
+    first : bool;
+    payload : string
+  } [@@deriving of_yojson { strict = false }, show]
+
   type t =
     | Workspace of workspace_event_info
     | Output of output_event_info
@@ -363,6 +411,8 @@ module Event = struct
     | Window of window_event_info
     | BarConfig of bar_config_event_info
     | Binding of binding_event_info
+    | Shutdown of shutdown_reason
+    | Tick of tick_event_info
   [@@deriving show]
 end
 
@@ -498,6 +548,8 @@ let marks_ty = Uint32.of_int 5
 let bar_config_ty = Uint32.of_int 6
 let version_ty = Uint32.of_int 7
 let binding_modes_ty = Uint32.of_int 8
+let config_ty = Uint32.of_int 9
+let send_tick_ty = Uint32.of_int 10
 
 let ignore_error = function
   | Result.Ok x -> x
@@ -564,6 +616,25 @@ let get_version conn =
     (send_cmd_with_ty conn version_ty "")
     Reply.version_of_yojson
 
+let get_binding_modes conn =
+  handle_reply
+    (send_cmd_with_ty conn binding_modes_ty "")
+    Reply.binding_modes_of_yojson
+
+let get_config conn =
+  let%lwt protocol_reply =
+    handle_reply
+      (send_cmd_with_ty conn config_ty "")
+      Reply.config_of_yojson in
+  Lwt.return protocol_reply
+
+let send_tick conn payload =
+  let%lwt protocol_reply =
+    handle_reply
+      (send_cmd_with_ty conn send_tick_ty payload)
+      Reply.tick_of_yojson in
+  Lwt.return protocol_reply.Reply.tick_success
+
 (******************************************************************************)
 
 type subscription =
@@ -573,6 +644,8 @@ type subscription =
   | Window
   | BarConfig
   | Binding
+  | Shutdown
+  | Tick
 
 let subscription_to_yojson = function
   | Workspace -> `String "workspace"
@@ -581,6 +654,8 @@ let subscription_to_yojson = function
   | Window -> `String "window"
   | BarConfig -> `String "barconfig_update"
   | Binding -> `String "binding"
+  | Shutdown -> `String "shutdown"
+  | Tick -> `String "tick"
 
 type subscription_list =
   subscription list [@@deriving to_yojson]
@@ -602,6 +677,15 @@ let event_of_raw_event (ty, payload) =
   | 3 -> Event.Window (Event.window_event_info_of_yojson j |> ignore_error)
   | 4 -> Event.BarConfig (Event.bar_config_event_info_of_yojson j |> ignore_error)
   | 5 -> Event.Binding (Event.binding_event_info_of_yojson j |> ignore_error)
+  | 6 -> Event.Shutdown (
+    let shutdown_event_info =
+      Event.shutdown_event_info_of_yojson j |> ignore_error in
+    match shutdown_event_info.Event.change with
+    | "restart" -> Restart
+    | "exit" -> Exit
+    | v -> raise (Protocol_error (Bad_reply v))
+  )
+  | 7 -> Event.Tick (Event.tick_event_info_of_yojson j |> ignore_error)
   | _ -> raise (Protocol_error (Unknown_type ty))
 
 let next_event conn =

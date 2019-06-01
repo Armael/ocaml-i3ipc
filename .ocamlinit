@@ -1,9 +1,10 @@
 #require "lwt.unix";;
-#require "lwt.ppx";;
+#require "lwt_ppx";;
 #require "stdint";;
 #require "yojson";;
 #require "ppx_deriving_yojson";;
 #require "ppx_deriving.show";;
-#require "rresult";;
-#directory "_build/src";;
+#require "result";;
+#directory "_build/default/src";;
+#directory "_build/default/src/.i3ipc.objs/byte";;
 #load "i3ipc.cmo";;
