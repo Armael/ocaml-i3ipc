@@ -72,12 +72,12 @@ module Reply : sig
     window_role: string option;
   }
 
-  type id = string
+  type node_id = string
 
   type node = {
     nodes: node list;
     floating_nodes: node list;
-    id: id;
+    id: node_id;
     name: string option;
     num: int option;
     nodetype: node_type;
@@ -93,7 +93,7 @@ module Reply : sig
     window_properties: window_properties option;
     urgent: bool;
     focused: bool;
-    focus: int32 list;
+    focus: node_id list;
   }
 
   type mark = string
@@ -154,10 +154,6 @@ module Reply : sig
     config : string
   }
 
-  type tick = {
-    tick_success : bool
-  }
-
   (** {3 Pretty-printing} *)
 
   val pp_command_outcome : Format.formatter -> command_outcome -> unit
@@ -173,8 +169,7 @@ module Reply : sig
   val pp_bar_config : Format.formatter -> bar_config -> unit
   val pp_version : Format.formatter -> version -> unit
   val pp_binding_modes : Format.formatter -> binding_modes -> unit
-  val pp_config : Format.formatter -> string -> unit
-  val pp_tick : Format.formatter -> bool -> unit
+  val pp_config : Format.formatter -> config -> unit
 end
 
 (** Type definitions for the events that can be subscribed to. *)
@@ -375,7 +370,7 @@ val get_version : connection -> Reply.version Lwt.t
 val get_binding_modes : connection -> Reply.binding_modes Lwt.t
 
 (** Get the config file as loaded by i3 most recently. *)
-val get_config : connection -> string Lwt.t
+val get_config : connection -> Reply.config Lwt.t
 
 (** Sends a tick event with the specified payload. *)
 val send_tick : connection -> string -> bool Lwt.t

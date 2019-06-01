@@ -118,20 +118,20 @@ module Reply = struct
     window_role: string option [@default None];
   } [@@deriving of_yojson { strict = false }, show]
 
-  type id = string
+  type node_id = string
 
-  let id_of_yojson id_j =
+  let node_id_of_yojson id_j =
     match id_j with
     | `Int i -> Result.Ok (string_of_int i)
     | `Intlit s -> Result.Ok s
     | _ -> Result.Error ("not an integer literal: "^(Yojson.Safe.to_string id_j))
 
-  let pp_id fmt i = Format.pp_print_string fmt i
+  let pp_node_id fmt i = Format.pp_print_string fmt i
 
   type node = {
     nodes : (node list [@default []]);
     floating_nodes: (node list [@default []]);
-    id: id;
+    id: node_id;
     name: string option;
     num: int option [@default None];
     nodetype: node_type [@key "type"];
@@ -147,7 +147,7 @@ module Reply = struct
     window_properties: window_properties option [@default None];
     urgent: bool;
     focused: bool;
-    focus: int32 list;
+    focus: node_id list;
   } [@@deriving of_yojson { strict = false }, show]
 
   type mark = string [@@deriving yojson, show]
@@ -278,17 +278,11 @@ module Reply = struct
 
   type config = {
     config : string
-  } [@@deriving of_yojson, show]
-
-  let pp_config fmt config =
-    Format.pp_print_string fmt config
+  } [@@deriving of_yojson { strict = false }, show]
 
   type tick = {
     tick_success : bool [@key "success"]
   } [@@deriving of_yojson, show]
-
-  let pp_tick fmt tick =
-    Format.pp_print_bool fmt tick
 end
 
 (******************************************************************************)
@@ -408,7 +402,7 @@ module Event = struct
   type tick_event_info = {
     first : bool;
     payload : string
-  } [@@deriving of_yojson, show]
+  } [@@deriving of_yojson { strict = false }, show]
 
   type t =
     | Workspace of workspace_event_info
@@ -420,9 +414,6 @@ module Event = struct
     | Shutdown of shutdown_reason
     | Tick of tick_event_info
   [@@deriving show]
-
-  let unfold_shut_info sev =
-    sev.change
 end
 
 (******************************************************************************)
@@ -635,7 +626,7 @@ let get_config conn =
     handle_reply
       (send_cmd_with_ty conn config_ty "")
       Reply.config_of_yojson in
-  Lwt.return protocol_reply.Reply.config
+  Lwt.return protocol_reply
 
 let send_tick conn payload =
   let%lwt protocol_reply =
@@ -688,10 +679,8 @@ let event_of_raw_event (ty, payload) =
   | 5 -> Event.Binding (Event.binding_event_info_of_yojson j |> ignore_error)
   | 6 -> Event.Shutdown (
     let shutdown_event_info =
-      Event.shutdown_event_info_of_yojson j
-      |> ignore_error
-      |> Event.unfold_shut_info in
-    match shutdown_event_info with
+      Event.shutdown_event_info_of_yojson j |> ignore_error in
+    match shutdown_event_info.Event.change with
     | "restart" -> Restart
     | "exit" -> Exit
     | v -> raise (Protocol_error (Bad_reply v))

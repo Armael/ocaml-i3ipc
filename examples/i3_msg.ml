@@ -68,7 +68,7 @@ let main =
     I3ipc.Reply.pp_config fmt config |> Lwt.return
   | "send_tick" ->
     let%lwt tick = I3ipc.send_tick conn payload in
-    I3ipc.Reply.pp_tick fmt tick |> Lwt.return
+    Format.pp_print_bool fmt tick |> Lwt.return
   | _ -> Format.fprintf Format.err_formatter "Unsupported message type"; exit 1
 
 let () = Lwt_main.run main
