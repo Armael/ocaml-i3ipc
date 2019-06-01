@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "i3ipc"
 version: "dev"
 maintainer: "armael@isomorphis.me"
@@ -9,10 +9,12 @@ bug-reports: "https://github.com/Armael/ocaml-i3ipc/issues"
 dev-repo: "https://github.com/Armael/ocaml-i3ipc"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "build" "@doc"] {with-doc}
 ]
 depends: [
   "lwt"
   "dune" {build}
+  "odoc" {with-doc}
   "ppx_deriving_yojson"
   "result"
   "stdint"
@@ -20,3 +22,7 @@ depends: [
 ]
 available: [ ocaml-version >= "4.02.0" ]
 tags: [ "i3" "ipc" "window-manager" ]
+synopsis: "A pure OCaml implementation of the i3 IPC protocol"
+description: """
+This library allows you to communicate with a running instance of i3, run
+commands, query information about the state of the WM, and subscribe to events."""
