@@ -12,6 +12,7 @@ build: [
   ["dune" "build" "@doc"] {with-doc}
 ]
 depends: [
+  "ocaml" {>= "4.03.0"}
   "lwt"
   "dune" {build}
   "odoc" {with-doc}
@@ -20,7 +21,6 @@ depends: [
   "stdint"
   "base-bytes"
 ]
-available: [ ocaml-version >= "4.02.0" ]
 tags: [ "i3" "ipc" "window-manager" ]
 synopsis: "A pure OCaml implementation of the i3 IPC protocol"
 description: """
