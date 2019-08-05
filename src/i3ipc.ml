@@ -426,9 +426,9 @@ type connection = {
 
 let connect () =
   try%lwt
-    let%lwt socketpath = match Sys.getenv_opt "I3SOCK" with
-      | None -> Lwt_process.pread ("i3", [|"i3"; "--get-socketpath"|])
-      | Some s -> Lwt.return s
+    let%lwt socketpath = match Sys.getenv "I3SOCK" with
+      | exception Not_found -> Lwt_process.pread ("i3", [|"i3"; "--get-socketpath"|])
+      | s -> Lwt.return s
     in
     let socketpath = String.trim socketpath in
     let fd = Lwt_unix.socket Lwt_unix.PF_UNIX Lwt_unix.SOCK_STREAM 0 in
