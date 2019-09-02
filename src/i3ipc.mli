@@ -8,6 +8,8 @@ type protocol_error =
   | Unknown_type of Stdint.Uint32.t
   | Bad_reply of string
 
+val pp_protocol_error : Format.formatter -> protocol_error -> unit
+
 exception Protocol_error of protocol_error
 
 (** Type definitions for the command replies. *)

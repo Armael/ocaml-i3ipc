@@ -12,8 +12,9 @@ type protocol_error =
   | No_IPC_socket
   | Bad_magic_string of string
   | Unexpected_eof
-  | Unknown_type of Uint32.t
+  | Unknown_type of Uint32.t [@printer Uint32.printer]
   | Bad_reply of string
+[@@deriving show]
 
 exception Protocol_error of protocol_error
 
