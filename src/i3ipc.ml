@@ -110,11 +110,19 @@ module Reply = struct
     | `String s -> Result.Ok (Unknown s)
     | j -> Result.Error ("Reply.node_layout_of_yojson: " ^ Json.to_string j)
 
+  (* According to the X11 protocol specification
+     (https://www.x.org/releases/X11R7.5/doc/x11proto/proto.pdf), a X11 window
+     ID is a 32 bits integer with its top three bits guaranteed to be zero.
+
+     Consequently, it is representable as an OCaml integer, including on 32 bits
+     platforms. *)
+  type x11_window_id = int [@@deriving of_yojson, show]
+
   type window_properties = {
     class_: string option [@key "class"];
     instance: string option;
     title: string option;
-    transient_for: string option;
+    transient_for: x11_window_id option;
     window_role: string option [@default None];
   } [@@deriving of_yojson { strict = false }, show]
 
@@ -143,7 +151,7 @@ module Reply = struct
     window_rect: rect;
     deco_rect: rect;
     geometry: rect;
-    window: int option;
+    window: x11_window_id option;
     window_properties: window_properties option [@default None];
     urgent: bool;
     focused: bool;

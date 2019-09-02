@@ -64,11 +64,13 @@ module Reply : sig
     | Output
     | Unknown of string
 
+  type x11_window_id = int
+
   type window_properties = {
     class_: string option;
     instance: string option;
     title: string option;
-    transient_for: string option;
+    transient_for: x11_window_id option;
     window_role: string option;
   }
 
@@ -89,7 +91,7 @@ module Reply : sig
     window_rect: rect;
     deco_rect: rect;
     geometry: rect;
-    window: int option;
+    window: x11_window_id option;
     window_properties: window_properties option;
     urgent: bool;
     focused: bool;
