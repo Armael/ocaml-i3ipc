@@ -54,7 +54,7 @@ module Reply = struct
     name: string;
     active: bool;
     primary: bool;
-    current_workspace: string option;
+    current_workspace: string option [@default None];
     rect: rect;
   } [@@deriving of_yojson { strict = false }, show]
 
@@ -120,10 +120,10 @@ module Reply = struct
   type x11_window_id = int [@@deriving of_yojson, show]
 
   type window_properties = {
-    class_: string option [@key "class"];
-    instance: string option;
-    title: string option;
-    transient_for: x11_window_id option;
+    class_: string option [@key "class"] [@default None];
+    instance: string option [@default None];
+    title: string option [@default None];
+    transient_for: x11_window_id option [@default None];
     window_role: string option [@default None];
   } [@@deriving of_yojson { strict = false }, show]
 
@@ -141,18 +141,18 @@ module Reply = struct
     nodes : (node list [@default []]);
     floating_nodes: (node list [@default []]);
     id: node_id;
-    name: string option;
+    name: string option [@default None];
     num: int option [@default None];
     nodetype: node_type [@key "type"];
     border: node_border;
     current_border_width: int;
     layout: node_layout;
-    percent: float option;
+    percent: float option [@default None];
     rect: rect;
     window_rect: rect;
     deco_rect: rect;
     geometry: rect;
-    window: x11_window_id option;
+    window: x11_window_id option [@default None];
     window_properties: window_properties option [@default None];
     urgent: bool;
     focused: bool;
@@ -313,8 +313,8 @@ module Event = struct
 
   type workspace_event_info = {
     change: workspace_change;
-    current: Reply.node option;
-    old: Reply.node option;
+    current: Reply.node option [@default None];
+    old: Reply.node option [@default None];
   } [@@deriving of_yojson { strict = false }, show]
 
   type output_change =
@@ -389,8 +389,8 @@ module Event = struct
     command: string;
     event_state_mask: string list;
     input_code: int;
-    mods: string list option;
-    symbol: string option;
+    mods: string list option [@default None];
+    symbol: string option [@default None];
     input_type: input_type;
   } [@@deriving of_yojson { strict = false }, show]
 
