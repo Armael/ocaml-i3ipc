@@ -78,6 +78,11 @@ module Reply : sig
 
   type node_id = string
 
+  type fullscreen_mode =
+    | No_fullscreen
+    | Fullscreened_on_output
+    | Fullscreened_globally
+
   type node = {
     nodes: node list;
     floating_nodes: node list;
@@ -98,6 +103,7 @@ module Reply : sig
     urgent: bool;
     focused: bool;
     focus: node_id list;
+    fullscreen_mode: fullscreen_mode;
   }
 
   type mark = string

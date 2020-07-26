@@ -137,6 +137,18 @@ module Reply = struct
 
   let pp_node_id fmt i = Format.pp_print_string fmt i
 
+  type fullscreen_mode =
+    | No_fullscreen
+    | Fullscreened_on_output
+    | Fullscreened_globally
+  [@@deriving show]
+
+  let fullscreen_mode_of_yojson = function
+    | `Int 0 -> Result.Ok No_fullscreen
+    | `Int 1 -> Result.Ok Fullscreened_on_output
+    | `Int 2 -> Result.Ok Fullscreened_globally
+    | j -> Result.Error ("Reply.fullscreen_mode_of_yojson: " ^ Json.to_string j)
+
   type node = {
     nodes : (node list [@default []]);
     floating_nodes: (node list [@default []]);
@@ -157,6 +169,7 @@ module Reply = struct
     urgent: bool;
     focused: bool;
     focus: node_id list;
+    fullscreen_mode: fullscreen_mode;
   } [@@deriving of_yojson { strict = false }, show]
 
   type mark = string [@@deriving yojson, show]
