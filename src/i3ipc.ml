@@ -315,6 +315,10 @@ module Event = struct
     | Init
     | Empty
     | Urgent
+    | Reload
+    | Rename
+    | Restored
+    | Move
   [@@deriving show]
 
   let workspace_change_of_yojson = function
@@ -322,6 +326,10 @@ module Event = struct
     | `String "init" -> Result.Ok Init
     | `String "empty" -> Result.Ok Empty
     | `String "urgent" -> Result.Ok Urgent
+    | `String "reload" -> Result.Ok Reload
+    | `String "rename" -> Result.Ok Rename
+    | `String "restored" -> Result.Ok Restored
+    | `String "move" -> Result.Ok Move
     | j -> Result.Error ("Event.workspace_change_of_yojson: " ^ Json.to_string j)
 
   type workspace_event_info = {
