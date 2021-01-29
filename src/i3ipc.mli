@@ -189,6 +189,10 @@ module Event : sig
     | Init
     | Empty
     | Urgent
+    | Reload
+    | Rename
+    | Restored
+    | Move
 
   type workspace_event_info = {
     change: workspace_change;
