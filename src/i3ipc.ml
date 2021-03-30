@@ -83,12 +83,14 @@ module Reply = struct
     | Border_normal
     | Border_none
     | Border_pixel
+    | Border_csd
   [@@deriving show]
 
   let node_border_of_yojson = function
     | `String "normal" -> Result.Ok Border_normal
     | `String "none" -> Result.Ok Border_none
     | `String "pixel" -> Result.Ok Border_pixel
+    | `String "csd" -> Result.Ok Border_csd
     | j -> Result.Error ("Reply.node_border_of_yojson: " ^ Json.to_string j)
 
   type node_layout =

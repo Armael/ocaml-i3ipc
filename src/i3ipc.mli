@@ -56,6 +56,7 @@ module Reply : sig
     | Border_normal
     | Border_none
     | Border_pixel
+    | Border_csd
 
   type node_layout =
     | SplitH
