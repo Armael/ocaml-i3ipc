@@ -14,12 +14,13 @@ build: [
 depends: [
   "ocaml" {>= "4.03.0"}
   "lwt"
-  "dune" {build}
+  "lwt_ppx"
+  "dune" {>= "1.0"}
   "odoc" {with-doc}
-  "ppx_deriving_yojson"
+  "ppx_deriving" {>= "4.2"}
+  "ppx_deriving_yojson" {>= "3.2"}
   "result"
   "stdint"
-  "base-bytes"
 ]
 tags: [ "i3" "ipc" "window-manager" ]
 synopsis: "A pure OCaml implementation of the i3 IPC protocol"
